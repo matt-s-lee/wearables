@@ -1,5 +1,14 @@
 "use strict";
 
+const { MongoClient } = require("mongodb");
+require("dotenv").config({ path: "./.env" });
+const { MONGO_URI } = process.env;
+
+const options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+};
+
 // returns a list of all items
 const getAllItems = async (req, res) => {};
 
@@ -15,7 +24,29 @@ const getItemsByCategory = async (req, res) => {};
 // return random items for new-arrivals 
 // and for sale-items
 // 2 endpoints use the same function
-const getRandomItems = async (req, res) => {};
+const getRandomItems = async (req, res) => {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+    try {
+      // connect to the client
+      await client.connect();
+      // connect to the database 
+      const db = client.db("items");
+      //find items
+      const result = await db.collection("items").find().toArray();
+      //Get 10 random elements from the array. Reference blog https://bobbyhadz.com/blog/javascript-get-multiple-random-elements-from-array
+      const randomArray = [...result].sort(() => 0.5 - Math.random()).slice(0,10);
+      if (result) {
+        res.status(200).json({ status: 200, data: randomArray });
+      } else {
+        res.status(404).json({ status: 404, message: "Result is empty" });
+      }
+      // close the connection to the database server
+      client.close();
+    } catch (err) {
+      console.log(err.stack);
+    }
+  };
 
 module.exports = {
     getAllItems,
