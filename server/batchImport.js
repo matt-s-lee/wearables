@@ -11,9 +11,9 @@ const options = {
 // import JSON file to Mongodb using fs packge
 // reference: https://stackoverflow.com/questions/54587040/import-external-json-file-to-mongodb-using-nodejs-and-mongoose
 const fs = require('fs');
-let companiesData = fs.readFileSync('./server/data/companies.json');
+let companiesData = fs.readFileSync('./data/companies.json');
 let companies = JSON.parse(companiesData);
-let itemsData = fs.readFileSync('./server/data/items.json');
+let itemsData = fs.readFileSync('./data/items.json');
 let items = JSON.parse(itemsData);
 
 
