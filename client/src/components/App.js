@@ -12,6 +12,8 @@ import OrderHistory from "./OrderHistory";
 import Footer from "./Footer";
 import ItemBig from "./ItemBig";
 import BrandPage from "./BrandPage";
+import Signin from "./SignIn";
+import Checkout from "./Checkout";
 
 const App = () => {
   const [bacon, setBacon] = useState(null);
@@ -36,6 +38,8 @@ const App = () => {
           <Route path="/user/:user" element={<UserProfile />} />
           <Route path="/order-history/:id" element={<OrderHistory />} />
           <Route path="/item/:id" element={<ItemBig />} />
+          <Route exact path="/signin" element={<Signin />} />
+          <Route exact path="/checkout" element={<Checkout />} />
         </Routes>
         <Footer />
       </Main>
