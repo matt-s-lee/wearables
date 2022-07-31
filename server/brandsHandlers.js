@@ -18,7 +18,7 @@ const getAllBrands = async (req, res) => {
       // connect to the client
       await client.connect();
       // connect to the database 
-      const db = client.db("companies");
+      const db = client.db("EcommerceGroupProject");
       //find companies
       const result = await db.collection("companies").find().toArray();
       const brandsArray = [];
