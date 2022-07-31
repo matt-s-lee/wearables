@@ -21,8 +21,8 @@ let items = JSON.parse(itemsData);
 let usersData = fs.readFileSync('./data/users.json');
 let users = JSON.parse(usersData);
 // read shoppingcart.json
-let shoppingcartsData = fs.readFileSync('./data/shoppingcarts.json');
-let shoppingcarts = JSON.parse(shoppingcartsData);
+let shoppingcartData = fs.readFileSync('./data/shoppingcarts.json');
+let shoppingcarts = JSON.parse(shoppingcartData);
 // read orders.json
 let ordersData = fs.readFileSync('./data/orders.json');
 let orders = JSON.parse(ordersData);
@@ -33,20 +33,13 @@ const batchImport = async () => {
 
     try {
         await client.connect();
-        const dbCompanies = client.db("companies");
-        await dbCompanies.collection("companies").insertMany(companies);
+        const db = client.db("EcommerceGroupProject");
 
-        const dbItems = client.db("items");
-        await dbItems.collection("items").insertMany(items);
-
-        const dbUsers = client.db("users");
-        await dbUsers.collection("users").insertMany(users);
-
-        const dbCart = client.db("shoppingcarts");
-        await dbCart.collection("shoppingcarts").insertMany(shoppingcarts);
-
-        const dbOrders = client.db("orders");
-        await dbOrders.collection("orders").insertMany(orders);
+        await db.collection("companies").insertMany(companies);  
+        await db.collection("items").insertMany(items);
+        await db.collection("users").insertMany(users);
+        await db.collection("shoppingcarts").insertMany(shoppingcarts);
+        await db.collection("orders").insertMany(orders);
 
         console.log("Success")
     } catch (err) {
