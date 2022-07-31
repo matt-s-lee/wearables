@@ -15,7 +15,7 @@ const getAllItems = async (req, res) => {
 
     try {
         await client.connect();
-        const db = client.db("items");
+        const db = client.db("EcommerceGroupProject");
         const result = await db.collection("items").find().toArray();
         if (result) {
             res.status(200).json({ status: 200, data: result });
@@ -36,7 +36,7 @@ const getOneItem = async (req, res) => {
 
   try {
     await client.connect();
-    const db = client.db("items");
+    const db = client.db("EcommerceGroupProject");
     const result = await db.collection("items").findOne({_id: parseInt(req.params.item)});
     if (result) {
         res.status(200).json({ status: 200, data: result });
@@ -57,9 +57,9 @@ const getItemsByBrand = async (req, res) => {
 
   try {
     await client.connect();
-    const db = client.db("items");
+    const db = client.db("EcommerceGroupProject");
     const result = await db.collection("items").find({companyId: parseInt(req.params.brandId)}).toArray();
-    if (result) {
+    if (result.length !== 0) {
         res.status(200).json({ status: 200, data: result });
     } else {
         res.status(404).json({ status: 404, message: "Items not found" });
@@ -78,9 +78,9 @@ const getItemsByCategory = async (req, res) => {
 
   try {
     await client.connect();
-    const db = client.db("items");
+    const db = client.db("EcommerceGroupProject");
     const result = await db.collection("items").find({category: req.params.categoryName}).toArray();
-    if (result) {
+    if (result.length !== 0) {
         res.status(200).json({ status: 200, data: result });
     } else {
         res.status(404).json({ status: 404, message: "Items not found" });
@@ -104,7 +104,7 @@ const getRandomItems = async (req, res) => {
       // connect to the client
       await client.connect();
       // connect to the database 
-      const db = client.db("items");
+      const db = client.db("EcommerceGroupProject");
       //find items
       const result = await db.collection("items").find().toArray();
       //Get 10 random elements from the array. Reference blog https://bobbyhadz.com/blog/javascript-get-multiple-random-elements-from-array

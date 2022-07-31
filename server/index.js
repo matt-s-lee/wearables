@@ -58,7 +58,7 @@ express()
 
   // Endpoints for users database
   .get("/api/user/", getOneUser) //e.g. ?email=tom_smith@gmail.com&password=verystrongpassword
-  .post("/api/user", addUser) //e.g. req.body={firstName: "tom", lastName: "Smith", email: "tom@gmail.com", password: "123456"}
+  .post("/api/user", addUser) //e.g. req.body={firstName: "tom", lastName: "Smith", email: "tom@gmail.com", password: "123456"} parse to JSON
   
   // Endpoints for shopping cart database
   .get("/api/all-items-in-cart/:user", getAllItemsInCart)
