@@ -10,16 +10,89 @@ const options = {
 };
 
 // returns a list of all items
-const getAllItems = async (req, res) => {};
+const getAllItems = async (req, res) => {
+  const client = new MongoClient(MONGO_URI, options);
+
+    try {
+        await client.connect();
+        const db = client.db("items");
+        const result = await db.collection("items").find().toArray();
+        if (result) {
+            res.status(200).json({ status: 200, data: result });
+        } else {
+            res.status(404).json({ status: 404, message: "Items not found" });
+        }  
+    } catch (err) {
+        console.log(err.stack);
+        res.status(500).json({ status: 500, message: err.message });
+    }
+
+    client.close()
+};
 
 // returns one item by its ID
-const getOneItem = async (req, res) => {};
+const getOneItem = async (req, res) => {
+  const client = new MongoClient(MONGO_URI, options);
+
+  try {
+    await client.connect();
+    const db = client.db("items");
+    const result = await db.collection("items").findOne({_id: parseInt(req.params.item)});
+    if (result) {
+        res.status(200).json({ status: 200, data: result });
+    } else {
+        res.status(404).json({ status: 404, message: "Item not found" });
+    }  
+} catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ status: 500, message: err.message });
+}
+
+client.close()
+};
 
 // returns items by brand
-const getItemsByBrand = async (req, res) => {};
+const getItemsByBrand = async (req, res) => {
+  const client = new MongoClient(MONGO_URI, options);
+
+  try {
+    await client.connect();
+    const db = client.db("items");
+    const result = await db.collection("items").find({companyId: parseInt(req.params.brandId)}).toArray();
+    if (result) {
+        res.status(200).json({ status: 200, data: result });
+    } else {
+        res.status(404).json({ status: 404, message: "Items not found" });
+    }  
+} catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ status: 500, message: err.message });
+}
+
+client.close()
+};
 
 // returns items by category
-const getItemsByCategory = async (req, res) => {};
+const getItemsByCategory = async (req, res) => {
+  const client = new MongoClient(MONGO_URI, options);
+
+  try {
+    await client.connect();
+    const db = client.db("items");
+    const result = await db.collection("items").find({category: req.params.categoryName}).toArray();
+    if (result) {
+        res.status(200).json({ status: 200, data: result });
+    } else {
+        res.status(404).json({ status: 404, message: "Items not found" });
+    }  
+} catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ status: 500, message: err.message });
+}
+
+client.close()
+  
+};
 
 // return random items for new-arrivals 
 // and for sale-items
