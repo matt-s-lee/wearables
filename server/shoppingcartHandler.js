@@ -67,7 +67,7 @@ const addItemInCart = async (req, res) => {
                 // add item to shooping cart with quantity 1
                 if (itemIndex === -1) {
                     const newItem = {
-                        itemId: item,
+                        itemId: parseInt(item),
                         quantity: 1
                     }
                     result.items.push(newItem);
@@ -79,7 +79,7 @@ const addItemInCart = async (req, res) => {
                 res.status(201).json({ status: 201, data: result, message: "item successfully added" });
             } else {
                 const newItem = {
-                    itemId: item,
+                    itemId: parseInt(item),
                     quantity: 1
                 }
                 const cart = {
