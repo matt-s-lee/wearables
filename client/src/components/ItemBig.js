@@ -1,15 +1,12 @@
 //
 
-<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 // PAGE COMPONENT for each individual item
-=======
 //individual page for each item
 //a route
->>>>>>> master
 const ItemBig = () => {
   // ****** code here to change to useReducer logic
   const [item, setItem] = useState();
