@@ -1,6 +1,7 @@
 import styled from "styled-components"
 
-
+//homepage
+//a route
 const HomePage = () => {
 
 

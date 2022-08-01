@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
-
+//company profile page
+//a route
 const Contact = () => {
 
 

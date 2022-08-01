@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
-
+//all items page
+//a route
 const ItemsPage = () => {
 
 

@@ -1,4 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+<<<<<<< HEAD
+import { useContext, useEffect } from 'react';
+=======
+>>>>>>> master
 import GlobalStyles from "./GlobalStyles";
 import Header from "./Header";
 import styled from "styled-components";
@@ -14,8 +18,26 @@ import ItemBig from "./ItemBig";
 import BrandPage from "./BrandPage";
 import Signin from "./SignIn";
 import Checkout from "./Checkout";
+import { ShopContext } from "./ShopContext";
 
 const App = () => {
+<<<<<<< HEAD
+  const {state , actions: {handleCategoryAndBrandLoad}} = useContext(ShopContext);
+
+  //fetch category and brands for header
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/all-categories").then(res => res.json()),
+      fetch("/api/all-brands").then(res => res.json()),
+    ]).then(data => {
+      // console.log(data)
+      handleCategoryAndBrandLoad(data)
+    })
+  }, [])
+  
+
+=======
+>>>>>>> master
   return (
     <BrowserRouter>
       <GlobalStyles />
