@@ -114,35 +114,15 @@ const Checkout = () => {
           />
         </PostalCode>
         
-        <div class="custom-control custom-checkbox">
-          <input
-            type="checkbox"
-            class="custom-control-input"
-            id="same-address"
-          />
-          <label class="custom-control-label" for="same-address">
-            Shipping address is the same as my billing address
-          </label>
-        </div>
-        <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="save-info" />
-          <label class="custom-control-label" for="save-info">
-            Save this information for next time
-          </label>
-        </div>
-
-        <h4 class="mb-3">Payment</h4>
-
-        <div class="d-block my-3">
+        <PaymentMethods>
           <div class="custom-control custom-radio">
             <input
               id="credit"
               name="paymentMethod"
               type="radio"
               class="custom-control-input"
-              checked=""
               required=""
-            />
+            />  
             <label class="custom-control-label" for="credit">
               Credit card
             </label>
@@ -171,7 +151,7 @@ const Checkout = () => {
               Paypal
             </label>
           </div>
-        </div>
+        </PaymentMethods>
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="cc-name">Name on card</label>
@@ -182,7 +162,7 @@ const Checkout = () => {
               placeholder=""
               required=""
             />
-            <small class="text-muted">Full name as displayed on card</small>
+    
           </div>
           <div class="col-md-6 mb-3">
             <label for="cc-number">Credit card number</label>
@@ -242,4 +222,7 @@ const Address1 = styled.div``;
 const Country = styled.div``;
 const Select = styled.select``;
 const State = styled.div``;
+const City = styled.div``;
+const PostalCode = styled.div``;
+const PaymentMethods = styled.div``;
 export default Checkout;
