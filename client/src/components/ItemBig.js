@@ -1,6 +1,7 @@
 import styled from "styled-components"
 
-
+//individual page for each item
+//a route
 const ItemBig = () => {
 
 

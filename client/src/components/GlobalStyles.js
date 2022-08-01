@@ -4,6 +4,9 @@ import { createGlobalStyle } from "styled-components";
 export default createGlobalStyle`
   :root {
     --header-height: 110px;
+    --padding-page: 24px;
+    --font: 'Press Start 2P', cursive;
+    --font-logo: 'Rampart One', cursive;
   }
 
     *,
@@ -36,6 +39,7 @@ export default createGlobalStyle`
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+    outline: 1px solid green;
   }
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure, 
@@ -44,6 +48,7 @@ export default createGlobalStyle`
   }
   body {
     line-height: 1;
+    font-family: 'Press Start 2P', cursive;
   }
   ol, ul {
     list-style: none;

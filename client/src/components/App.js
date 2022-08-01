@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import GlobalStyles from "./GlobalStyles";
 import Header from "./Header";
 import styled from "styled-components";
@@ -14,15 +14,22 @@ import ItemBig from "./ItemBig";
 import BrandPage from "./BrandPage";
 import Signin from "./SignIn";
 import Checkout from "./Checkout";
+import { ShopContext } from "./ShopContext";
 
 const App = () => {
-  const [bacon, setBacon] = useState(null);
+  const {state , actions: {handleCategoryAndBrandLoad}} = useContext(ShopContext);
 
+  //fetch category and brands for header
   useEffect(() => {
-    fetch('/bacon')
-      .then(res => res.json())
-      .then(data => setBacon(data));
-  }, []);
+    Promise.all([
+      fetch("/api/all-categories").then(res => res.json()),
+      fetch("/api/all-brands").then(res => res.json()),
+    ]).then(data => {
+      // console.log(data)
+      handleCategoryAndBrandLoad(data)
+    })
+  }, [])
+  
 
   return (
     <BrowserRouter>
@@ -43,7 +50,6 @@ const App = () => {
         </Routes>
         <Footer />
       </Main>
-
     </BrowserRouter>
   )
 }
