@@ -18,7 +18,7 @@ const BrandPage = () => {
         console.log(data)
         setItems(data.data);
       })  
-  }, [])
+  }, [brand])
 
 
 
@@ -41,7 +41,9 @@ const BrandPage = () => {
   }
   else {
     return (
-      <LoadingScreen />
+      <Wrapper>
+        <LoadingScreen />
+      </Wrapper>
     )
   }
 }
@@ -50,6 +52,7 @@ const Wrapper = styled.div`
   padding: 0 var(--padding-page);
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 `
 
 export default BrandPage;
