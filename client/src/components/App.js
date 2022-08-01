@@ -16,6 +16,7 @@ import BrandPage from "./BrandPage";
 import Signin from "./SignIn";
 import Checkout from "./Checkout";
 import { ShopContext } from "./ShopContext";
+import LoadingScreen from "./LoadingScreen";
 
 const App = () => {
   const {
@@ -30,36 +31,55 @@ const App = () => {
       fetch("/api/all-brands").then((res) => res.json()),
     ]).then((data) => {
       // console.log(data)
-      handleCategoryAndBrandLoad(data);
-    });
-  }, []);
+      handleCategoryAndBrandLoad(data)
+    })
+    // eslint-disable-next-line
+  }, [])
 
-  return (
-    <BrowserRouter>
-      <GlobalStyles />
-      <Header />
-      <Main>
-        <Routes>
-          <Route exact path="/" element={<HomePage />} />
-          <Route exact path="/category" element={<CategoryPage />} />
-          <Route exact path="/brand" element={<BrandPage />} />
-          <Route path="/new-arrivals" element={<NewArrivals />} />
-          <Route exact path="/contact" element={<Contact />} />
-          <Route path="/products" element={<ItemsPage />} />
-          <Route path="/user/:user" element={<UserProfile />} />
-          <Route path="/order-history/:id" element={<OrderHistory />} />
-          <Route path="/item/:id" element={<ItemBig />} />
-          <Route exact path="/signin" element={<Signin />} />
-          <Route exact path="/checkout" element={<Checkout />} />
-        </Routes>
-        <Footer />
-      </Main>
-    </BrowserRouter>
-  );
+  if (state.load) {
+    return (
+      <BrowserRouter>
+        <GlobalStyles />
+        <Header />
+        <Main>
+          <Routes>
+            <Route exact path="/" element={<HomePage />} />
+            <Route exact path="/categories" element={<CategoryPage />} />
+            <Route exact path="/brands" element={<BrandPage />} />
+            <Route path="/new-arrivals" element={<NewArrivals />} />
+            <Route exact path="/contact" element={<Contact />} />
+            <Route path="/products" element={<ItemsPage />} />
+            <Route path="/user/:user" element={<UserProfile />} />
+            <Route path="/order-history/:id" element={<OrderHistory />} />
+            <Route path="/item/:id" element={<ItemBig />} />
+            <Route exact path="/signin" element={<Signin />} />
+            <Route exact path="/checkout" element={<Checkout />} />
+            <Route path="">404: Oops!</Route>
+          </Routes>
+          <Footer />
+        </Main>
+      </BrowserRouter>
+    );
+  }
+  else {
+    return (
+      <Wrapper>
+        <LoadingScreen />
+      </Wrapper>
+    )
+  }
+
 };
 
 const Main = styled.div`
   height: calc(100vh - var(--header-height));
 `;
+
+const Wrapper = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 
 export default App;
