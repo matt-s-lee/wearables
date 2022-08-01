@@ -1,5 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+<<<<<<< HEAD
 import { useContext, useEffect } from 'react';
+=======
+import { useContext, useEffect } from "react";
+>>>>>>> master
 import GlobalStyles from "./GlobalStyles";
 import Header from "./Header";
 import styled from "styled-components";
@@ -19,15 +23,23 @@ import { ShopContext } from "./ShopContext";
 import LoadingScreen from "./LoadingScreen";
 
 const App = () => {
+<<<<<<< HEAD
   const { state, actions: { handleCategoryAndBrandLoad } } = useContext(ShopContext);
+=======
+  const {
+    state,
+    actions: { handleCategoryAndBrandLoad },
+  } = useContext(ShopContext);
+>>>>>>> master
 
   //fetch category and brands for header
   useEffect(() => {
     Promise.all([
-      fetch("/api/all-categories").then(res => res.json()),
-      fetch("/api/all-brands").then(res => res.json()),
-    ]).then(data => {
+      fetch("/api/all-categories").then((res) => res.json()),
+      fetch("/api/all-brands").then((res) => res.json()),
+    ]).then((data) => {
       // console.log(data)
+<<<<<<< HEAD
       handleCategoryAndBrandLoad(data)
     })
     // eslint-disable-next-line
@@ -66,6 +78,34 @@ const App = () => {
     )
   }
 
+=======
+      handleCategoryAndBrandLoad(data);
+    });
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <GlobalStyles />
+      <Header />
+      <Main>
+        <Routes>
+          <Route exact path="/" element={<HomePage />} />
+          <Route exact path="/category" element={<CategoryPage />} />
+          <Route exact path="/brand" element={<BrandPage />} />
+          <Route path="/new-arrivals" element={<NewArrivals />} />
+          <Route exact path="/contact" element={<Contact />} />
+          <Route path="/products" element={<ItemsPage />} />
+          <Route path="/user/:user" element={<UserProfile />} />
+          <Route path="/order-history/:id" element={<OrderHistory />} />
+          <Route path="/item/:id" element={<ItemBig />} />
+          <Route exact path="/signin" element={<Signin />} />
+          <Route exact path="/checkout" element={<Checkout />} />
+        </Routes>
+        <Footer />
+      </Main>
+    </BrowserRouter>
+  );
+>>>>>>> master
 };
 
 const Main = styled.div`
