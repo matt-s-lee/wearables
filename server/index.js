@@ -68,7 +68,10 @@ express()
 
   // Endpoints for order history database
   .get("/api/all-orders-by-user/:user", getAllOrders)
-  .post("/api/add-order", addOrder) //e.g. req.body={user: 123, items: [09809809, 4356232]}
+  .post("/api/add-order", addOrder) //eg. req.body = {
+  //   "userId":"testUser1",
+  //   "items":[{"itemId":6543,"quantity":"3"},{"itemId":6544,"quantity":5}]
+  // }
 
 
   .listen(PORT, () => console.info(`Listening on port ${PORT}`));
