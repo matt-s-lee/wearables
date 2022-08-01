@@ -32,7 +32,7 @@ const BrandPage = () => {
               name={item.name}
               price={item.price}
               companyId={item.companyId}
-              id={item.id}
+              id={item._id}
             />
           )
         })}

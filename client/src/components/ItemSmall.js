@@ -25,10 +25,16 @@ const ItemSmall = ({ imageSrc, name, price, companyId, id }) => {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: front;
   align-items: center;
   width: 300px;
-  margin: 20px 10px;
+  margin: 10px;
+  padding: 10px;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  cursor: pointer;
+  transition: transform 0.5s;
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const Image = styled.img`
@@ -40,8 +46,10 @@ const Image = styled.img`
 const Company = styled.div``;
 const Name = styled.div`
   margin: 10px 0px;
-  height: 40px;
+  height: fit-content;
   text-align: center;
+  max-width: 250px;
+  line-height: 1.2;
 `;
 const Price = styled.div`
   margin: 5px 0px;
