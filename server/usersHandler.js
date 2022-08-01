@@ -23,7 +23,7 @@ const getOneUser = async (req, res) => {
             // connect to the client
             await client.connect();
             // connect to the database 
-            const db = client.db("users");
+            const db = client.db("EcommerceGroupProject");
             //find user
             const result = await db.collection("users").findOne({email: user.email});
 
@@ -62,7 +62,7 @@ const addUser = async (req, res) => {
             // connect to the client
             await client.connect();
             // connect to the database 
-            const db = client.db("users");
+            const db = client.db("EcommerceGroupProject");
             //find user
             const result = await db.collection("users").findOne({email: user.email});
 
@@ -71,7 +71,7 @@ const addUser = async (req, res) => {
                 await db.collection("users").insertOne(user);
                 res.status(201).json({ status: 201, message: "user successfully added" });
             } else {
-                res.status(400).json({ status: 404, message: `user existed` });
+                res.status(400).json({ status: 404, message: `user already existed` });
             }
             // close the connection to the database server
             client.close();
@@ -82,7 +82,7 @@ const addUser = async (req, res) => {
         res.status(422).json({ status: 422, message: "missing information" })
     }
 
-}
+};
 
 module.exports = {
     getOneUser,

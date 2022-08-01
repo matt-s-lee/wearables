@@ -17,7 +17,7 @@ const getAllCategories = async (req, res) => {
       // connect to the client
       await client.connect();
       // connect to the database 
-      const db = client.db("items");
+      const db = client.db("EcommerceGroupProject");
       //find items
       const result = await db.collection("items").find().toArray();
       const categoryArray = [];

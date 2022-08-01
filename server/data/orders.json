@@ -1,7 +1,20 @@
 [
     {
-        "_id": 100000,
-        "userId": 12321,
-        "items": [6543, 6546, 6560]
+        "_id": "100000asdf",
+        "userId": "abc12321",
+        "items": [
+            {
+                "itemId": 6543, 
+                "quantity": 1
+            },
+            {
+                "itemId": 6546, 
+                "quantity": 2
+            },
+            {
+                "itemId": 6560, 
+                "quantity": 1
+            }
+        ]
     }
 ]
