@@ -42,7 +42,7 @@ express()
   // Endpoints for items database
   .get("/api/all-items", getAllItems)
   .get("/api/item/:item", getOneItem)
-  .get("/api/items-by-brand/:brandId", getItemsByBrand)
+  .get("/api/items-by-brand/:brandName", getItemsByBrand)
   .get("/api/items-by-category/:categoryName", getItemsByCategory)
 
   // sale items and new arrivals items endpoints
