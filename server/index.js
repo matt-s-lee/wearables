@@ -55,6 +55,7 @@ express()
 
   // Endpoints for companies database
   .get("/api/all-brands",getAllBrands)
+  // .get("/api/get-brand-name",getCompanyNameByBrand)
 
   // Endpoints for users database
   .get("/api/user/", getOneUser) //e.g. ?email=tom_smith@gmail.com&password=verystrongpassword
