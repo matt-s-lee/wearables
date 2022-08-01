@@ -78,7 +78,17 @@ const addItemInCart = async (req, res) => {
                 await db.collection("shoppingcarts").updateOne({_id}, { $set: result });
                 res.status(201).json({ status: 201, data: result, message: "item successfully added" });
             } else {
-                res.status(404).json({ status: 404, data: req.body, message: "shopping cart not found" });
+                const newItem = {
+                    itemId: item,
+                    quantity: 1
+                }
+                const cart = {
+                    _id: _id,
+                    userID: _id,
+                    items: [newItem]
+                };
+                await db.collection("shoppingcarts").insertOne(cart);
+                res.status(201).json({ status: 201, data: result, message: "item successfully added" });
             }
             // close the connection to the database server
             client.close();
