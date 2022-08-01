@@ -3,10 +3,10 @@ import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
   :root {
-    --header-height: 110px;
+    --header-height: 150px;
     --padding-page: 24px;
-    --font: 'Press Start 2P', cursive;
-    --font-logo: 'Rampart One', cursive;
+    --font: 'Jost', sans-serif;
+    --font-logo: 'Bungee Shade', cursive;
   }
 
     *,
@@ -39,7 +39,7 @@ export default createGlobalStyle`
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
-    outline: 1px solid green;
+    /* outline: 1px solid green; */
   }
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure, 
