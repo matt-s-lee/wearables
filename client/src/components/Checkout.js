@@ -1,5 +1,5 @@
 import Address from "ipaddr.js";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import styled from "styled-components";
 import states from "../data/states";
 
@@ -8,221 +8,193 @@ import states from "../data/states";
 const Checkout = () => {
   const [country, setCountry] = useState(null);
 
+  const [cartItems, setCartItems] = useState(null);
+  const [cartItemsArray,setCartItemsArray] = useState([]);
+  let cartItems1 = [];
+
+  const userId = "abc12321"; // hard-coded user, until we can create new users
+
+  useEffect(() =>{
+    fetch(`/api/all-items-in-cart/${userId}`)
+    .then((res) => res.json())
+    .then((json) => {
+      setCartItems(json.data.items);
+      console.log(cartItems)
+    });
+    if(cartItems){
+      cartItems.map(item =>{
+        console.log(item.itemId)
+      })
+    Promise.all(cartItems.map(item =>
+        fetch(`/api/users/${item.itemId}`).then(resp => resp.json())
+    )).then(data => {
+      console.log(data);
+        data.forEach(function(obj){
+          cartItems1.push(obj)
+        })
+        setCartItemsArray(cartItems1)
+    })
+    console.log(cartItemsArray);
+}
+  },[])
+
   const selectCountry = (e) => {
-    if(e.target.value === "United States"){
-      setCountry("USA")
-    }
-    else{
-    setCountry(e.target.value);
+    if (e.target.value === "United States") {
+      setCountry("USA");
+    } else {
+      setCountry(e.target.value);
     }
   };
 
   return (
-    <Wrapper>
-      <Form>
-        <Names>
-          <FirstName>
+    <>
+      <H1>Checkout</H1>
+      <Wrapper>
+        <Form>
+          <Names>
+            <FirstName>
+              <Input type="text" placeholder="First Name" required="" />
+            </FirstName>
+            <LastName>
+              <Input type="text" placeholder="Last Name" required="" />
+            </LastName>
+          </Names>
+
+          <Address1>
+            <Input type="text" id="address" placeholder="Street Address" />
+          </Address1>
+
+          <Address2>
             <Input
               type="text"
-              class="form-control"
-              id="firstName"
-              placeholder="First Name"
-              value=""
-              required=""
+              id="address2"
+              placeholder="Apartment #, Suite etc.(Optional)"
             />
-          </FirstName>
-          <LastName>
+          </Address2>
+
+          <Country>
+            <Select id="country" required="" onChange={(e) => selectCountry(e)}>
+              <option value="" disabled selected>
+                Choose a Country
+              </option>
+              <option>Canada</option>
+              <option>United States</option>
+            </Select>
+          </Country>
+          <State>
+            <Select id="state" required="">
+              <option value="" disabled selected>
+                Select a Region
+              </option>
+              {country !== null
+                ? states[country].map((state) => {
+                    return (
+                      <>
+                        <option value={state.name}>{state.name}</option>
+                      </>
+                    );
+                  })
+                : null}
+            </Select>
+          </State>
+          <Address2>
             <Input
               type="text"
-              class="form-control"
-              id="lastName"
-              placeholder="Last Name"
-              value=""
-              required=""
+              id="address2"
+              placeholder="Apartment #, Suite etc.(Optional)"
             />
-          </LastName>
-        </Names>
+          </Address2>
 
-        <Address1>
-          <Input
-            type="text"
-            class="form-control"
-            id="address"
-            placeholder="Street Address"
-            required=""
-          />
-        </Address1>
+          <City>
+            <Input type="text" id="city" placeholder="City" />
+          </City>
 
-        <Address2>
-          <Input
-            type="text"
-            class="form-control"
-            id="address2"
-            placeholder="Apartment #, Suite etc.(Optional)"
-          />
-        </Address2>
-
-        <Country>
-          <Select
-            class="custom-select"
-            id="country"
-            required=""
-            onChange={(e) => selectCountry(e)}>
-            <option value="">Choose...</option>
-            <option>Canada</option>
-            <option>United States</option>
-          </Select>
-        </Country>
-        <State>
-          <Select class="custom-select" id="state" required="">
-            <option value="" disabled selected>
-              Select a Region
-            </option>
-           {country !== null ? states[country].map((state) => {
-              return (
-                <>
-                  <option value={state.name}>{state.name}</option>
-                </>
-              );
-            }):null}
-          </Select>
-        </State>
-        <Address2>
-          <Input
-            type="text"
-            class="form-control"
-            id="address2"
-            placeholder="Apartment #, Suite etc.(Optional)"
-          />
-        </Address2>
-
-        <City>
-          <Input
-            type="text"
-            class="form-control"
-            id="city"
-            placeholder="City"
-          />
-        </City>
-
-        <PostalCode>
-          <Input
-            type="text"
-            class="form-control"
-            id="city"
-            placeholder="Postal Code/Pin Code"
-          />
-        </PostalCode>
-        
-        <PaymentMethods>
-          <div class="custom-control custom-radio">
-            <input
-              id="credit"
-              name="paymentMethod"
-              type="radio"
-              class="custom-control-input"
-              required=""
-            />  
-            <label class="custom-control-label" for="credit">
-              Credit card
-            </label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input
-              id="debit"
-              name="paymentMethod"
-              type="radio"
-              class="custom-control-input"
-              required=""
-            />
-            <label class="custom-control-label" for="debit">
-              Debit card
-            </label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input
-              id="paypal"
-              name="paymentMethod"
-              type="radio"
-              class="custom-control-input"
-              required=""
-            />
-            <label class="custom-control-label" for="paypal">
-              Paypal
-            </label>
-          </div>
-        </PaymentMethods>
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label for="cc-name">Name on card</label>
-            <input
+          <PostalCode>
+            <Input
               type="text"
-              class="form-control"
-              id="cc-name"
-              placeholder=""
-              required=""
+              id="postalCode"
+              placeholder="Postal Code/Pin Code"
             />
-    
-          </div>
-          <div class="col-md-6 mb-3">
-            <label for="cc-number">Credit card number</label>
-            <input
-              type="text"
-              class="form-control"
-              id="cc-number"
-              placeholder=""
-              required=""
-            />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-3 mb-3">
-            <label for="cc-expiration">Expiration</label>
-            <input
-              type="text"
-              class="form-control"
-              id="cc-expiration"
-              placeholder=""
-              required=""
-            />
-          </div>
-          <div class="col-md-3 mb-3">
-            <label for="cc-expiration">CVV</label>
-            <input
-              type="text"
-              class="form-control"
-              id="cc-cvv"
-              placeholder=""
-              required=""
-            />
-          </div>
-        </div>
-        <button class="btn btn-primary btn-lg btn-block" type="submit">
-          Continue to checkout
-        </button>
-      </Form>
-    </Wrapper>
+          </PostalCode>
+
+          <PhoneNumber>
+            <Input type="text" id="number" placeholder="Phone" />
+          </PhoneNumber>
+
+          <Button type="submit">NEXT: PAYMENT</Button>
+        </Form>
+        <OrderSummary>
+          <H1>Order summary</H1>
+
+        </OrderSummary>
+      </Wrapper>
+    </>
   );
 };
 
 const Wrapper = styled.div`
   font-family: var(--font);
+  margin: 0 24px;
+  box-sizing: border-box;
+  display: flex;
 `;
-const Form = styled.form``;
+const H1 = styled.h1`
+  font-size: 24px;
+  padding: 15px 24px;
+  font-family: var(--font);
+  margin: 0 24px;
+`;
+const Form = styled.form`
+  box-sizing: border-box;
+  border: 1px solid #E8E8E8;
+  width: 50%;
+  font-family: var(--font);
+  margin: 0 24px;
+`;
+
 const Names = styled.div`
   display: flex;
 `;
-const FirstName = styled.div``;
-const LastName = styled.div``;
+const FirstName = styled.div`
+  width: 50%;
+`;
+const LastName = styled.div`
+  width: 50%;
+`;
+
 const Input = styled.input`
   padding: 10px;
+  width: calc(100% - 40px);
+  margin: 10px 20px 10px 20px;
+  font-family: var(--font);
+   {
+    word-break: break-all;
+  }
 `;
 const Address2 = styled.div``;
 const Address1 = styled.div``;
 const Country = styled.div``;
-const Select = styled.select``;
+const Select = styled.select`
+  padding: 10px;
+  width: calc(100% - 40px);
+  margin: 10px 20px 10px 20px;
+  font-family: var(--font);
+`;
 const State = styled.div``;
 const City = styled.div``;
 const PostalCode = styled.div``;
-const PaymentMethods = styled.div``;
+const PhoneNumber = styled.div``;
+const Button = styled.button`
+font-family: var(--font);
+  padding: 10px;
+  width: calc(100% - 40px);
+  margin: 10px 20px 10px 20px;
+  border: none;
+  background: #ffa500;
+  &:hover {
+    color: white;
+  }
+`;
+
+const OrderSummary = styled.div``;
 export default Checkout;
