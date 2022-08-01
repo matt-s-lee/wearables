@@ -12,7 +12,7 @@ const Header = () => {
     <Wrapper>
       <WrapperTop>
         <Nav to="/contact">
-          <Collection>Contect Us</Collection>
+          <Collection>Contact Us</Collection>
         </Nav>
         <Logo to="/" >Logo</Logo>
         <Nav to="/signin">

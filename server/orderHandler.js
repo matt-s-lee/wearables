@@ -45,8 +45,6 @@ const addOrder = async (req, res) => {
     res
       .status(201)
       .json({ status: 201, message: "Order added", data: req.body });
-    let seat = req.body.seat;
-    let flight = req.body.flight;
   } else {
     res
       .status(404)
