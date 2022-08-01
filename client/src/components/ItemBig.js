@@ -25,7 +25,7 @@ const ItemBig = () => {
 
     // CHECK that the user is logged in; if so, GET user ID to POST to
     // the back-end, when they add an item to the cart. If no user logged-in,
-    // userID = "none"
+    // userID = "none" ?
   }, []);
 
   // POST item to cart, when button is clicked
