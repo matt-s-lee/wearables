@@ -1,90 +1,55 @@
-import { useContext } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { ShopContext } from "./ShopContext";
-import { underline, underlineTransition } from "./underline";
+import ItemSmall from "./ItemSmall";
+import LoadingScreen from "./LoadingScreen";
 
-//all brands page
+//shopping cart
 //a route
-
-//missing some styling in letter and item
-
 const BrandPage = () => {
-  const { state } = useContext(ShopContext);
+  const brand = useParams().brand;
+  const [items, setItems] = useState(null)
+
+  useEffect(() => {
+    console.log(brand)
+    fetch(`/api/items-by-brand/${brand}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        setItems(data.data);
+      })  
+  }, [])
 
 
-  //sorting brands alphabetically and seperate by letter in an array each
-  const sortByLetter = state.brands.reduce((acc, brand) => {
-    let firstLetter = brand[0].toUpperCase();
-    if (!acc[firstLetter]) {
-      acc[firstLetter] = { data: [brand] }
-    }
-    else {
-      acc[firstLetter].data.push(brand)
-    }
-    return acc;
-  }, {})
 
-  return (
-    <Wrapper>
-      {/* sorting letters alphabetically and map each letter */}
-      {Object.keys(sortByLetter).sort().map(letter => {
-        return (
-          <LetterWrapper>
-            <Letter>{letter}</Letter>
-            <ItemList>
-              {/* mapping array assigned to letter */}
-              {sortByLetter[letter].data.map(brand => {
-                return (
-                  <Item>
-                    <ItemAfter>
-                      {brand}
-                    </ItemAfter>
-                  </Item>
-                )
-              })}
-            </ItemList>
-          </LetterWrapper>
-        )
-      })}
-    </Wrapper>
-  )
+  if (items !== null) {
+    return (
+      <Wrapper>
+        {items.map(item => {
+          return (
+            <ItemSmall
+              imageSrc={item.imageSrc}
+              name={item.name}
+              price={item.price}
+              companyId={item.companyId}
+              id={item.id}
+            />
+          )
+        })}
+      </Wrapper>
+    )
+  }
+  else {
+    return (
+      <LoadingScreen />
+    )
+  }
 }
 
-const Letter = styled.div`
-
-`
-
-const LetterWrapper = styled.div`
-
-`
-
 const Wrapper = styled.div`
+  padding: 0 var(--padding-page);
   display: flex;
   flex-wrap: wrap;
-  padding: 0 var(--padding-page);
 `
-
-const ItemList = styled.div`
-
-`
-
-const Item = styled.div`
-  padding: 10px;
-  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0, rgba(255, 255, 255, 0.8) -6px -2px 16px 0;
-`
-
-const ItemAfter = styled.div`
-  font-size: 18px;
-  position: relative;
-  &:after{
-    ${underline};
-  }
-  &:hover:after{
-    ${underlineTransition};
-
-  }
-`
-
 
 export default BrandPage;
-
