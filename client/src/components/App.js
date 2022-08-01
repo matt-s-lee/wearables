@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from 'react';
 import GlobalStyles from "./GlobalStyles";
 import Header from "./Header";
 import styled from "styled-components";
 import HomePage from "./HomePage";
 import CategoryPage from "./CategoryPage";
+import NewArrivals from "./NewArrivals";
 import Contact from "./Contact";
 import ItemsPage from "./ItemsPage";
 import UserProfile from "./UserProfile";
@@ -16,14 +16,6 @@ import Signin from "./SignIn";
 import Checkout from "./Checkout";
 
 const App = () => {
-  const [bacon, setBacon] = useState(null);
-
-  useEffect(() => {
-    fetch('/bacon')
-      .then(res => res.json())
-      .then(data => setBacon(data));
-  }, []);
-
   return (
     <BrowserRouter>
       <GlobalStyles />
@@ -33,6 +25,7 @@ const App = () => {
           <Route exact path="/" element={<HomePage />} />
           <Route exact path="/category" element={<CategoryPage />} />
           <Route exact path="/brand" element={<BrandPage />} />
+          <Route path="/new-arrivals" element={<NewArrivals />} />
           <Route exact path="/contact" element={<Contact />} />
           <Route path="/products" element={<ItemsPage />} />
           <Route path="/user/:user" element={<UserProfile />} />
@@ -43,13 +36,12 @@ const App = () => {
         </Routes>
         <Footer />
       </Main>
-
     </BrowserRouter>
-  )
-}
+  );
+};
 
 const Main = styled.div`
   height: calc(100vh - var(--header-height));
-`
+`;
 
 export default App;
