@@ -75,14 +75,14 @@ const Header = () => {
 
 const List = styled.div`
   max-height: 555px;
-  visibility: visible;
+  visibility: hidden;
   position: absolute;
   text-decoration: none;
   overflow: auto;
   background-color: rgb(211, 211, 211);
   left: 10%;
   white-space: nowrap;
-  padding: 0 10px 5px 0;
+  padding: 0 10px 5px 10px;
   z-index: 10;
   &:hover {
     visibility: visible;
@@ -98,7 +98,6 @@ const ListAfter = styled.div`
 `
 
 const ListItem = styled(NavLink)`
-  padding: 8px 0;
   font-size: 18px;
   width: fit-content;
   cursor: pointer;
@@ -112,6 +111,7 @@ const ListItem = styled(NavLink)`
 
 const DropWrapper = styled.div`
   position: relative;
+  padding: 8px 0;
 `
 
 const Wrapper = styled.header`

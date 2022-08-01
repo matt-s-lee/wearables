@@ -17,7 +17,7 @@ const CategoryPage = () => {
         // console.log(data)
         setItems(data.data)
       })
-  }, [])
+  }, [category])
 
   if (items !== null) {
     return (
@@ -38,7 +38,9 @@ const CategoryPage = () => {
   }
   else {
     return (
-      <LoadingScreen />
+      <Wrapper>
+        <LoadingScreen />
+      </Wrapper>
     )
   }
 }
@@ -47,6 +49,7 @@ const Wrapper = styled.div`
   padding: 0 var(--padding-page);
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 `
 
 export default CategoryPage;
