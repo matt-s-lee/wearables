@@ -32,7 +32,7 @@ const Header = () => {
               {state.brands.map(brand => {
                 return (
                   <DropWrapper>
-                    <ListItem>
+                    <ListItem to={`/brands/${brand}`}>
                       <ListAfter>
                         {brand}
                       </ListAfter>
@@ -52,7 +52,7 @@ const Header = () => {
               {state.categories.map(category => {
                 return (
                   <DropWrapper>
-                    <ListItem>
+                    <ListItem to={`/categories/${category}`}>
                       <ListAfter>
                         {category}
                       </ListAfter>
@@ -73,9 +73,9 @@ const Header = () => {
 
 
 
-const List = styled.ul`
+const List = styled.div`
   max-height: 555px;
-  visibility: hidden;
+  visibility: visible;
   position: absolute;
   text-decoration: none;
   overflow: auto;
@@ -91,16 +91,20 @@ const List = styled.ul`
 
 const ListAfter = styled.div`
   position: relative;
+  width: fit-content;
   &:after {
     ${underline}
   }
 `
 
-const ListItem = styled.li`
-  padding: 12px 24px;
+const ListItem = styled(NavLink)`
+  padding: 8px 0;
   font-size: 18px;
   width: fit-content;
   cursor: pointer;
+  text-decoration: none;
+  color: black;
+  overflow: hidden;
   &:hover ${ListAfter}:after{
     ${underlineTransition}
   } 
