@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import ItemsPage from "./ItemsPage";
+import YouMayAlsoLike from "./YouMayAlsoLike";
 
 // PAGE COMPONENT for each individual item
 //individual page for each item
@@ -10,12 +11,15 @@ const ItemBig = () => {
   // ****** code here to change to useReducer logic
   const [item, setItem] = useState();
 
+  //useState for brandName
+const [brandName, steBrandName] = useState();
   // GET item ID # from URL
   const { id } = useParams();
 
   // get userId from localstorage
   // const userId = localStorage.getItem("userId");
-  const userId = "abc12321";
+  const userId = "abc12321";//remember to change to localstorage userId when it's added
+
   // FETCH details about the individual item
   useEffect(() => {
     fetch(`/api/item/${id}`)
@@ -30,6 +34,16 @@ const ItemBig = () => {
     // userID = "none" ?
   }, []);
 
+  useEffect(() => {
+    if (item) {
+      fetch(`/api/get-brand-name/${item.companyId}`)
+      .then((res)=> res.json())
+      .then((data) => {
+        console.log(data);
+        steBrandName(data.data);
+      })
+    }
+  }, [item]); 
   // POST item to cart, when button is clicked
   // ******** useReducer?
   const addToCart = (ev) => {
@@ -57,26 +71,31 @@ const ItemBig = () => {
   };
 
   return (
-    <>{item &&
+    <>
+    {item &&
       <>
         <Wrapper>
           <img alt="Item" src={item.imageSrc}/>
           <Details>
-            <Link to={"/api/items-by-brand/"}>
-              <CompanyId>{item.companyId}</CompanyId>
+            {brandName &&
+            <Link to={`/brands/${brandName}`} >
+              <CompanyId>{brandName}</CompanyId>
             </Link>
+            }
             <ItemName>{item.name}</ItemName>
             <ItemPrice>{item.price}</ItemPrice>
             <AddToCartButton onClick={addToCart}>Add to Cart</AddToCartButton>
-            <div></div>
+            <Description>
+                The worst wearables, all new. The worst wearables, all new. The worst
+                wearables, all new. The worst wearables, all new. The worst wearables,
+                all new. The worst wearables, all new. The worst wearables, all new. The
+                worst wearables, all new. The worst wearables, all new. The worst
+                wearables, all new.
+                </Description>
             {/* with dropdown capabilities? */}
           </Details>
         </Wrapper>
-        <YouMayAlsoLike>
-          <ImageDiv></ImageDiv>
-          <ImageDiv></ImageDiv>
-          <ImageDiv></ImageDiv>
-        </YouMayAlsoLike>
+        <YouMayAlsoLike />
       </>
       }
 
@@ -103,11 +122,9 @@ const ItemPrice = styled.div`
 const AddToCartButton = styled.button`
 `;
 
-const YouMayAlsoLike = styled.div`
+const Description = styled.p`
+padding: 100px;
+line-height: 1.4;
 `;
-
-const ImageDiv = styled.div``;
-
-
 export default ItemBig;
 
