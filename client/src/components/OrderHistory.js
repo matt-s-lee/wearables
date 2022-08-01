@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
-
+//for individual order 
+//a route
 const OrderHistory = () => {
 
 

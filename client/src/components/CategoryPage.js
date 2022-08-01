@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
-
+//all cateroies page
+//a route
 const CategoryPage = () => {
 
   return (

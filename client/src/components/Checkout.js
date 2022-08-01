@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
-
+//shopping cart
+//a route
 const Checkout = () => {
 
   return (
