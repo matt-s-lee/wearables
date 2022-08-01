@@ -10,34 +10,54 @@ const Checkout = () => {
 
   const [cartItems, setCartItems] = useState(null);
   const [cartItemsArray,setCartItemsArray] = useState([]);
+  const [flag,setFlag] = useState(false);
+  let total = 0;
+  let [finalSum,setFinalSum] = useState(0);
+  let price = 0;
+  let count = 0;
   let cartItems1 = [];
 
   const userId = "abc12321"; // hard-coded user, until we can create new users
 
+  //Get all the items in the cart of the user
   useEffect(() =>{
-    fetch(`/api/all-items-in-cart/${userId}`)
-    .then((res) => res.json())
-    .then((json) => {
-      setCartItems(json.data.items);
-      console.log(cartItems)
-    });
-    if(cartItems){
-      cartItems.map(item =>{
-        console.log(item.itemId)
-      })
+    const getCartDetails = async () => {
+      const response = await   fetch(`/api/all-items-in-cart/${userId}`)
+      const data = await response.json();
+      setCartItems(data.data.items);
+    };
+    getCartDetails();
+  }, []);
+
+    //Iterate through the items in the cart of the user and fetch the 
+    //item details from the items collection
+    useEffect(() =>{
+      if(cartItems){
     Promise.all(cartItems.map(item =>
-        fetch(`/api/users/${item.itemId}`).then(resp => resp.json())
+        fetch(`/api/item/${item.itemId}`).then(resp => resp.json())
     )).then(data => {
-      console.log(data);
         data.forEach(function(obj){
           cartItems1.push(obj)
         })
         setCartItemsArray(cartItems1)
     })
-    console.log(cartItemsArray);
-}
-  },[])
+  }
 
+  //Calculate the total price fo the order
+  if(cartItemsArray){
+    cartItemsArray.forEach((item =>{
+       price = parseFloat((item.data.price).replace("$",''));
+       total = total+price;
+       setFinalSum(total);
+      count ++;
+    }))
+    if(count === cartItemsArray.length){
+     setFinalSum(total);
+    }
+  }
+  },[cartItems])
+
+  //Method to set the country based on the country dropdown selection
   const selectCountry = (e) => {
     if (e.target.value === "United States") {
       setCountry("USA");
@@ -48,7 +68,10 @@ const Checkout = () => {
 
   return (
     <>
+    <Headings>
       <H1>Checkout</H1>
+      <H2>Order summary</H2>
+      </Headings>
       <Wrapper>
         <Form>
           <Names>
@@ -124,8 +147,26 @@ const Checkout = () => {
           <Button type="submit">NEXT: PAYMENT</Button>
         </Form>
         <OrderSummary>
-          <H1>Order summary</H1>
-
+          <OrderDetails>
+            {cartItemsArray !== null?
+            cartItemsArray.map((item,index) =>{
+             return(
+               <Order>
+               <Img src = {item.data.imageSrc}/>
+               <Name>{item.data.name}</Name>
+               <Price>{item.data.price}</Price>
+               </Order>
+             )
+            }):null}
+          </OrderDetails>
+          <Subtotal>
+              <SubtotalHead>SUBTOTAL</SubtotalHead>
+              {finalSum !==0?<Sum>${finalSum}</Sum>:null}
+            </Subtotal>
+            <Subtotal>
+              <SubtotalHead>SHIPPING</SubtotalHead>
+              {finalSum !==0?<Sum>$0</Sum>:null}
+            </Subtotal>
         </OrderSummary>
       </Wrapper>
     </>
@@ -150,6 +191,7 @@ const Form = styled.form`
   width: 50%;
   font-family: var(--font);
   margin: 0 24px;
+  height:630px;
 `;
 
 const Names = styled.div`
@@ -197,4 +239,49 @@ font-family: var(--font);
 `;
 
 const OrderSummary = styled.div``;
+const OrderDetails = styled.div`
+border-bottom:1px solid black;
+border-top:1px solid black;
+margin: 10px 20px 10px 20px;
+`
+const Name = styled.div`
+margin: 50px 20px 20px 20px;
+`;
+const Img = styled.img`
+ margin: 10px 20px 20px 0px;`;
+ 
+const Price = styled.div`
+margin: 50px 20px 20px 20px;
+align-items:right;
+`;
+const Order = styled.div`
+display:flex;
+justify-content:space-between;
+margin: 10px 20px 10px 20px;
+`
+const Subtotal = styled.div`
+display:flex;
+margin: 10px 20px 10px 20px;
+gap : 500px;
+border-bottom: 1px solid #E8E8E8;
+`
+const SubtotalHead = styled.div`
+margin: 10px 20px 10px 20px;
+font-size: 20px;
+`
+const Sum = styled.div`
+margin: 10px 20px 10px 20px;
+`
+const H2 = styled.h1`
+  font-size: 24px;
+  padding: 15px 24px;
+  font-family: var(--font);
+  margin: 0 24px;
+`;
+
+const Headings = styled.div`
+display:flex;
+gap:41%;
+`
+
 export default Checkout;
