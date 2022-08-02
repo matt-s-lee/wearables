@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { IoAddSharp, IoRemoveOutline } from "react-icons/io5";
 import SnackbarComponent from "./SnackbarComponent";
-import styled from "styled-components";
+
 import {
   YourCart,
   ItemsNum,
@@ -25,9 +25,6 @@ import {
   CostData,
   AddToCart,
 } from "./ReviewCartPage/reviewCartStyledComponents";
-
-import { addToCart } from "../handlers/addToCart";
-import PriceSummary from "./ReviewCartPage/PriceSummary";
 
 // ------------------------------------------------
 
