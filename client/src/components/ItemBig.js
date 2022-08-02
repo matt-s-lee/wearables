@@ -3,6 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ShopContext } from "./ShopContext";
 import YouMayAlsoLike from "./YouMayAlsoLike";
+
+import Snackbar from "@mui/material/Snackbar";
+import SnackbarComponent from "./SnackbarComponent";
+
 // PAGE COMPONENT for each individual item
 //individual page for each item
 //a route
@@ -15,6 +19,8 @@ const ItemBig = () => {
 
   //useState for outOfStock
   const [outOfStock, setOutOfStock] = useState(false);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // for Snackbar
 
   // GET item ID # from URL
   const { id } = useParams();
@@ -93,6 +99,9 @@ const ItemBig = () => {
           if (element.itemId === item._id && element.quantity >= item.numInStock) {
             setOutOfStock(true);
           }
+          if (data.status === 201) {
+            setSnackbarOpen(true);
+          }
         });
       })
       .catch((err) => {
@@ -102,6 +111,11 @@ const ItemBig = () => {
 
   return (
     <>
+    <SnackbarComponent
+      message="Item added to cart"
+      snackbarOpen={snackbarOpen}
+      setSnackbarOpen={setSnackbarOpen} />
+    
     {item &&
       <>
         <Wrapper>
@@ -157,7 +171,7 @@ const ImgDiv = styled.div`
 const Img = styled.img`
 width: 70%;
 height: auto;
-object-fit: cover;
+object-fit: contain;
 `;
 
 const InfoDiv = styled.div`
@@ -220,6 +234,8 @@ const Hr = styled.hr`
 const DescriptionTitle = styled.p`
 font-size: 20px;
 `;
+
+
 
 export default ItemBig;
 
