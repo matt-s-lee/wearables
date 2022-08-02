@@ -27,7 +27,7 @@ const Header = () => {
             Order History
           </Collection>
         </Nav>
-        <Nav to="/checkout">
+        <Nav to="/review-cart">
           <Collection>
             <Cart />
             Cart
@@ -38,7 +38,7 @@ const Header = () => {
           <Collection>Sign In</Collection>
         </Nav>
         : <Nav to={`/user/${state.currentUser}`}>
-          <Collection>{`Hello ${state.currentUser}`}</Collection>
+          <Collection>{`Hello ${state.currentUser.name}`}</Collection>
         </Nav>
       }
         

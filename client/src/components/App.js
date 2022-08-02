@@ -59,7 +59,7 @@ const App = () => {
             <Route path="/item/:id" element={<ItemBig />} />
             <Route exact path="/signin" element={<Signin />} />
             <Route exact path="/checkout" element={<Checkout />} />
-            <Route exact path="/reviewcard" element={<ReviewCartPage />} />
+            <Route exact path="/review-cart" element={<ReviewCartPage />} />
             <Route path="">404: Oops!</Route>
           </Routes>
           <Footer />
