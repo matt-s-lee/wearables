@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { ShopContext } from "./ShopContext";
 import YouMayAlsoLike from "./YouMayAlsoLike";
-
 // PAGE COMPONENT for each individual item
 //individual page for each item
 //a route
@@ -21,7 +21,9 @@ const ItemBig = () => {
 
   // get userId from ShopContext
   // const userId = localStorage.getItem("userId");
-  const userId = "abc12321";
+  const {state} = useContext(ShopContext);
+
+  const userId = state.currentUser._id;
 
   // FETCH details about the individual item
   useEffect(() => {
@@ -32,6 +34,8 @@ const ItemBig = () => {
         setItem(data.data);
         if (data.data.numInStock < 1){
           setOutOfStock(true);
+        } else {
+          setOutOfStock(false);
         }
       });
 
@@ -48,8 +52,21 @@ const ItemBig = () => {
         console.log(data);
         steBrandName(data.data);
       });
+
+      fetch(`/api/all-items-in-cart/${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        data.data.items.forEach(element => {
+          console.log(element.quantity > item.numInStock)
+          // console.log(item)
+          if (element.itemId === item._id && element.quantity >= item.numInStock) {
+            setOutOfStock(true);
+          }
+        });
+      })
     }
-  }, [item]); 
+  }, [item]);
   // POST item to cart, when button is clicked
   // ******** useReducer?
   const addToCart = (ev) => {
@@ -69,11 +86,18 @@ const ItemBig = () => {
       .then((res) => res.json())
       .then((data) => {
         // show confirmation that it was added to the cart: MUI?
-        console.log(data);
+        console.log(data.data.items);
+        data.data.items.forEach(element => {
+          console.log(element.quantity > item.numInStock)
+          // console.log(item)
+          if (element.itemId === item._id && element.quantity >= item.numInStock) {
+            setOutOfStock(true);
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      // .catch((err) => {
-      //   console.log(err);
-      // });
   };
 
   return (
