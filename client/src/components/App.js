@@ -17,6 +17,9 @@ import Signin from "./SignIn";
 import Checkout from "./Checkout";
 import { ShopContext } from "./ShopContext";
 import LoadingScreen from "./LoadingScreen";
+import BrandsAllPage from "./BrandsAllPage";
+import CategoriesAllPage from "./CategoriesAllPage";
+import ReviewCartPage from "./ReviewCartPage";
 
 const App = () => {
   const {
@@ -30,7 +33,7 @@ const App = () => {
       fetch("/api/all-categories").then((res) => res.json()),
       fetch("/api/all-brands").then((res) => res.json()),
     ]).then((data) => {
-      // console.log(data)
+      console.log(data)
       handleCategoryAndBrandLoad(data)
     })
     // eslint-disable-next-line
@@ -44,16 +47,19 @@ const App = () => {
         <Main>
           <Routes>
             <Route exact path="/" element={<HomePage />} />
-            <Route exact path="/categories" element={<CategoryPage />} />
-            <Route exact path="/brands" element={<BrandPage />} />
+            <Route exact path="/categories" element={<CategoriesAllPage />} />
+            <Route path="/categories/:category" element={<CategoryPage/>}/>
+            <Route exact path="/brands" element={<BrandsAllPage/>} />
+            <Route path="/brands/:brand" element={<BrandPage/>}/>
             <Route path="/new-arrivals" element={<NewArrivals />} />
             <Route exact path="/contact" element={<Contact />} />
             <Route path="/products" element={<ItemsPage />} />
             <Route path="/user/:user" element={<UserProfile />} />
-            <Route path="/order-history/:id" element={<OrderHistory />} />
+            <Route path="/order-history" element={<OrderHistory />} />
             <Route path="/item/:id" element={<ItemBig />} />
             <Route exact path="/signin" element={<Signin />} />
             <Route exact path="/checkout" element={<Checkout />} />
+            <Route exact path="/reviewcard" element={<ReviewCartPage />} />
             <Route path="">404: Oops!</Route>
           </Routes>
           <Footer />
@@ -73,6 +79,7 @@ const App = () => {
 
 const Main = styled.div`
   height: calc(100vh - var(--header-height));
+  font-family: var(--font);
 `;
 
 const Wrapper = styled.div`

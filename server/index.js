@@ -13,7 +13,7 @@ const {
   getRandomItems,
 } = require("./itemsHandler");
 
-const { getAllBrands } = require("./brandsHandlers");
+const { getAllBrands, getCompanyNameByBrandId } = require("./brandsHandlers");
 const { getAllCategories } = require("./categoryHandlers");
 const { getOneUser, addUser } = require('./usersHandler');
 const { getAllItemsInCart, addItemInCart, deleteItemInCart, emptyCart } = require('./shoppingcartHandler');
@@ -42,7 +42,7 @@ express()
   // Endpoints for items database
   .get("/api/all-items", getAllItems)
   .get("/api/item/:item", getOneItem)
-  .get("/api/items-by-brand/:brandId", getItemsByBrand)
+  .get("/api/items-by-brand/:brandName", getItemsByBrand)
   .get("/api/items-by-category/:categoryName", getItemsByCategory)
 
   // sale items and new arrivals items endpoints
@@ -55,6 +55,7 @@ express()
 
   // Endpoints for companies database
   .get("/api/all-brands",getAllBrands)
+  .get("/api/get-brand-name/:companyId",getCompanyNameByBrandId)
 
   // Endpoints for users database
   .get("/api/user/", getOneUser) //e.g. ?email=tom_smith@gmail.com&password=verystrongpassword

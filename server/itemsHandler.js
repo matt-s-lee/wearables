@@ -58,7 +58,9 @@ const getItemsByBrand = async (req, res) => {
   try {
     await client.connect();
     const db = client.db("EcommerceGroupProject");
-    const result = await db.collection("items").find({companyId: parseInt(req.params.brandId)}).toArray();
+    const brandName = req.params.brandName;
+    const brandId = await (await db.collection("companies").findOne({name:brandName}))._id;
+    const result = await db.collection("items").find({companyId: parseInt(brandId)}).toArray();
     if (result.length !== 0) {
         res.status(200).json({ status: 200, data: result });
     } else {

@@ -1,8 +1,11 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { ShopContext } from "./ShopContext";
 import { underline, underlineTransition } from "./underline";
+import { BiHistory } from "react-icons/bi";
+import { BsCart4 } from "react-icons/bs";
+import { MdOutlineContactSupport } from "react-icons/md"
 
 //nav bar
 const Header = () => {
@@ -12,12 +15,33 @@ const Header = () => {
     <Wrapper>
       <WrapperTop>
         <Nav to="/contact">
-          <Collection>Contact Us</Collection>
+          <Collection>
+            <Contact />
+            Contect Us
+          </Collection>
         </Nav>
-        <Logo to="/" >Logo</Logo>
+        <Logo to="/" >WEARLESS</Logo>
+        <Nav to="/order-history">
+          <Collection>
+            <History />
+            Order History
+          </Collection>
+        </Nav>
+        <Nav to="/checkout">
+          <Collection>
+            <Cart />
+            Cart
+          </Collection>
+        </Nav>
+        {!state.currentUser ?
         <Nav to="/signin">
           <Collection>Sign In</Collection>
         </Nav>
+        : <Nav to={`/user/${state.currentUser}`}>
+          <Collection>{`Hello ${state.currentUser}`}</Collection>
+        </Nav>
+      }
+        
       </WrapperTop>
       <NavBar>
         <Nav to="/products">
@@ -32,7 +56,7 @@ const Header = () => {
               {state.brands.map(brand => {
                 return (
                   <DropWrapper>
-                    <ListItem>
+                    <ListItem to={`/brands/${brand}`}>
                       <ListAfter>
                         {brand}
                       </ListAfter>
@@ -52,7 +76,7 @@ const Header = () => {
               {state.categories.map(category => {
                 return (
                   <DropWrapper>
-                    <ListItem>
+                    <ListItem to={`/categories/${category}`}>
                       <ListAfter>
                         {category}
                       </ListAfter>
@@ -73,7 +97,7 @@ const Header = () => {
 
 
 
-const List = styled.ul`
+const List = styled.div`
   max-height: 555px;
   visibility: hidden;
   position: absolute;
@@ -82,7 +106,7 @@ const List = styled.ul`
   background-color: rgb(211, 211, 211);
   left: 10%;
   white-space: nowrap;
-  padding: 0 10px 5px 0;
+  padding: 0 10px 5px 10px;
   z-index: 10;
   &:hover {
     visibility: visible;
@@ -91,23 +115,22 @@ const List = styled.ul`
 
 const ListAfter = styled.div`
   position: relative;
+  width: fit-content;
   &:after {
     ${underline}
   }
 `
 
-const ListItem = styled.li`
-  padding: 12px 24px;
+const ListItem = styled(NavLink)`
   font-size: 18px;
   width: fit-content;
   cursor: pointer;
+  text-decoration: none;
+  color: black;
+  overflow: hidden;
   &:hover ${ListAfter}:after{
     ${underlineTransition}
   } 
-`
-
-const DropWrapper = styled.div`
-  position: relative;
 `
 
 const Wrapper = styled.header`
@@ -122,10 +145,14 @@ const Logo = styled(NavLink)`
   font-family: var(--font-logo);
   font-size: 48px;
   color: black;
+  flex-grow: 3;
+  text-align: center;
 `
 
 const Collection = styled.div`
   position: relative;
+  display: flex;
+  align-items: center;
   &:after{
     ${underline}
     background-color: white;
@@ -135,19 +162,25 @@ const Collection = styled.div`
 const Nav = styled(NavLink)`
   text-decoration: none;
   cursor: pointer;
-
   padding: 15px 24px;
   font-size: 24px;
   color: white;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-
   &:hover ${Collection}:after{
     ${underlineTransition}
   } 
   &:hover + ${List} {
     visibility: visible;
+  }
+`
+
+const DropWrapper = styled.div`
+  position: relative;
+  padding: 8px 0;
+  & ${Nav} {
+    
   }
 `
 
@@ -162,7 +195,10 @@ const WrapperTop = styled.div`
   & ${Nav} {
     color: black;
     background-color: white;
-    margin: 0 24px;
+    /* margin: 0 24px; */
+    padding: 15px 0;
+    flex-grow: 1;
+    /* width: fit-content; */
   }
 `
 
@@ -172,6 +208,23 @@ const NavBar = styled.div`
   height: fit-content;
   width: 100%;
   background-color: black;
+`
+
+const IconsCSS = css`
+  padding: 0 4px;
+  width: 30px;
+`
+
+const Cart = styled(BsCart4)`
+  ${IconsCSS}
+`
+
+const History = styled(BiHistory)`
+  ${IconsCSS}
+`
+
+const Contact = styled(MdOutlineContactSupport)`
+  ${IconsCSS}
 `
 
 export default Header;

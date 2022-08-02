@@ -20,6 +20,7 @@ const Circle = styled.div`
   width: 150px;
   height: 150px;
   animation: ${circleSpin} 1s linear infinite;
+  margin: 0 auto;
 `
 
 export default LoadingScreen;
