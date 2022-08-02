@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
-import ItemsPage from "./ItemsPage";
 import YouMayAlsoLike from "./YouMayAlsoLike";
 
 // PAGE COMPONENT for each individual item
@@ -12,13 +11,17 @@ const ItemBig = () => {
   const [item, setItem] = useState();
 
   //useState for brandName
-const [brandName, steBrandName] = useState();
+  const [brandName, steBrandName] = useState();
+
+  //useState for outOfStock
+  const [outOfStock, setOutOfStock] = useState(false);
+
   // GET item ID # from URL
   const { id } = useParams();
 
-  // get userId from localstorage
+  // get userId from ShopContext
   // const userId = localStorage.getItem("userId");
-  const userId = "abc12321";//remember to change to localstorage userId when it's added
+  const userId = "abc12321";
 
   // FETCH details about the individual item
   useEffect(() => {
@@ -27,12 +30,15 @@ const [brandName, steBrandName] = useState();
       .then((data) => {
         console.log(data);
         setItem(data.data);
+        if (data.data.numInStock < 1){
+          setOutOfStock(true);
+        }
       });
 
     // CHECK that the user is logged in; if so, GET user ID to POST to
     // the back-end, when they add an item to the cart. If no user logged-in,
     // userID = "none" ?
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (item) {
@@ -41,7 +47,7 @@ const [brandName, steBrandName] = useState();
       .then((data) => {
         console.log(data);
         steBrandName(data.data);
-      })
+      });
     }
   }, [item]); 
   // POST item to cart, when button is clicked
@@ -75,28 +81,36 @@ const [brandName, steBrandName] = useState();
     {item &&
       <>
         <Wrapper>
-          <img alt="Item" src={item.imageSrc}/>
-          <Details>
-            {brandName &&
-            <Link to={`/brands/${brandName}`} >
-              <CompanyId>{brandName}</CompanyId>
-            </Link>
-            }
-            <ItemName>{item.name}</ItemName>
-            <ItemPrice>{item.price}</ItemPrice>
-            <AddToCartButton onClick={addToCart}>Add to Cart</AddToCartButton>
-            <Description>
-                The worst wearables, all new. The worst wearables, all new. The worst
-                wearables, all new. The worst wearables, all new. The worst wearables,
-                all new. The worst wearables, all new. The worst wearables, all new. The
-                worst wearables, all new. The worst wearables, all new. The worst
-                wearables, all new.
-                </Description>
-            {/* with dropdown capabilities? */}
-          </Details>
+          <ImgDiv>
+            <Img alt="Item" src={item.imageSrc}/>
+          </ImgDiv>
+          <InfoDiv>
+            <Details>
+              {brandName &&
+              <BrandLink to={`/brands/${brandName}`} >
+                <CompanyId>{brandName}</CompanyId>
+              </BrandLink>
+              }
+              <ItemName>{item.name}</ItemName>
+              <ItemPrice>{item.price}</ItemPrice>
+              <AddToCartButton onClick={addToCart} disabled={outOfStock}>Add to Cart</AddToCartButton>
+              <DescriptionTitle>
+                DESCRIPTION
+              </DescriptionTitle>
+              <Hr/>
+              <Description>
+                  The worst wearables, all new. The worst wearables, all new. The worst
+                  wearables, all new. The worst wearables, all new. The worst wearables,
+                  all new. The worst wearables, all new. The worst wearables, all new. The
+                  worst wearables, all new. The worst wearables, all new. The worst
+                  wearables, all new.
+                  </Description>
+              {/* with dropdown capabilities? */}
+            </Details>
+          </InfoDiv>
         </Wrapper>
         <YouMayAlsoLike />
-      </>
+              </>
       }
 
     </>
@@ -105,26 +119,83 @@ const [brandName, steBrandName] = useState();
 
 const Wrapper = styled.div`
   display: flex;
+  flex-direction: row;
+  width: 100vw;
+  padding: 100px;
+`;
+
+const ImgDiv = styled.div`
+  width: 50vw;
+  display: flex;
+  justify-content: center;
+`;
+
+const Img = styled.img`
+width: 70%;
+height: auto;
+object-fit: cover;
+`;
+
+const InfoDiv = styled.div`
+  width: 50vw;
+  padding: 0 100px 0 100px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Details = styled.div`
 `;
 
-const CompanyId = styled.div`
+const CompanyId = styled.p`
+  text-decoration: none;
+  font-size: 30px;
+  margin-bottom: 30px;
+`;
+
+const BrandLink = styled(Link)`
+text-decoration: none;
 `;
 
 const ItemName = styled.div`
+font-size: 40px;
+margin-bottom: 30px;
 `;
 
 const ItemPrice = styled.div`
+  margin-bottom: 30px;
+  font-weight: 700;
+  font-size: 20px;
 `;
 
 const AddToCartButton = styled.button`
+width: 100%;
+height: 40px;
+background-color: black;
+color: white;
+font-weight: 700;
+font-size: 14px;
+margin-bottom: 30px;
+cursor: pointer;
+
+&:disabled {
+filter: contrast(40%);
+};
 `;
 
-const Description = styled.p`
-padding: 100px;
+const Description = styled.div`
 line-height: 1.4;
+margin-bottom:s 30px;
+font-size: 15px;
 `;
+
+const Hr = styled.hr`
+  border: solid 1px;
+  margin-bottom: 30px;
+`;
+
+const DescriptionTitle = styled.p`
+font-size: 20px;
+`;
+
 export default ItemBig;
 
