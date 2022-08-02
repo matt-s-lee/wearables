@@ -3,8 +3,9 @@ import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ShopContext } from "./ShopContext";
 import YouMayAlsoLike from "./YouMayAlsoLike";
-import { IoIosClose } from "react-icons/io";
+
 import Snackbar from "@mui/material/Snackbar";
+import SnackbarComponent from "./SnackbarComponent";
 
 // PAGE COMPONENT for each individual item
 //individual page for each item
@@ -108,27 +109,12 @@ const ItemBig = () => {
       });
   };
 
-  // CLOSE snackbar
-  const handleCloseSnackbar = (ev, reason) => {
-    setSnackbarOpen(false);
-  };
-  const action = (
-    <>
-      <Button onClick={handleCloseSnackbar}>
-        <IoIosClose fontSize="20px" color="white" />
-      </Button>
-    </>
-  );
-
   return (
     <>
-    <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={2500}
-        message="Item added to cart"
-        onClose={handleCloseSnackbar}
-        action={action}
-      />
+    <SnackbarComponent
+      message="Item added to cart"
+      snackbarOpen={snackbarOpen}
+      setSnackbarOpen={setSnackbarOpen} />
     
     {item &&
       <>
@@ -249,11 +235,7 @@ const DescriptionTitle = styled.p`
 font-size: 20px;
 `;
 
-// Snackbar
-const Button = styled.button`
-  background: none;
-  border: none;
-`;
+
 
 export default ItemBig;
 
