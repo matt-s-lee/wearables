@@ -7,13 +7,30 @@ const Contact = () => {
 
   return (
     <Wrapper>
-      Contact
+      <Text>
+        Here at Wearless, we do not need your input.
+      </Text>
+      <Text>
+        If you do not find this acceptable, feel free to contact us at nosupport@nonexistant.not.
+      </Text>
+      <Text>
+        We forgive you.
+      </Text>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
 
+const Text = styled.div`
+  width: 309px;
+  line-height: 1.2;
 `
 
 export default Contact;
