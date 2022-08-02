@@ -6,12 +6,7 @@ const initialState = {
   load: false,
   brands: null,
   categories: null,
-  currentUser: {
-    "_id": "abc12321",
-    "firstName": "Tom",
-    "lastName": "Smith",
-    "email": "tom_smith@gmail.com",
-  },
+  currentUser: null,
 
 }
 
@@ -25,6 +20,11 @@ const reducer = (state, action) => {
         brands: action.brands,
         categories: action.categories,
       };
+    case "receive-user-data":
+      return {
+        ...state,
+        currentUser: action.user,
+      }
     default:
       throw new Error(`Unrecognized action: ${action.type}`);;
   }
@@ -33,7 +33,7 @@ const reducer = (state, action) => {
 export const ShopContenxtProvider = ({ children }) => {
   const [state, dispactch] = useReducer(reducer, initialState);
 
-
+  //process all categories and brands
   const handleCategoryAndBrandLoad = (data) => {
     dispactch({
       type: "receive-collection",
@@ -42,12 +42,21 @@ export const ShopContenxtProvider = ({ children }) => {
     })
   }
 
+  //process user data
+  const handleUserLogin = (data) => {
+    dispactch({
+      type: "receive-user-data",
+      user: data,
+    })
+  }
+
   return (
     <ShopContext.Provider
       value={{
         state,
         actions: {
-          handleCategoryAndBrandLoad
+          handleCategoryAndBrandLoad,
+          handleUserLogin,
         }
       }}
     >

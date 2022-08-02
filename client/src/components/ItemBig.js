@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { ShopContext } from "./ShopContext";
 import YouMayAlsoLike from "./YouMayAlsoLike";
 
+import Snackbar from "@mui/material/Snackbar";
+import SnackbarComponent from "./SnackbarComponent";
+
 // PAGE COMPONENT for each individual item
-//individual page for each item
-//a route
+// a route
 const ItemBig = () => {
-  // ****** code here to change to useReducer logic
   const [item, setItem] = useState();
 
   //useState for brandName
@@ -16,12 +18,16 @@ const ItemBig = () => {
   //useState for outOfStock
   const [outOfStock, setOutOfStock] = useState(false);
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // for Snackbar
+
   // GET item ID # from URL
   const { id } = useParams();
 
-  // get userId from ShopContext
+  // GET userId from ShopContext
   // const userId = localStorage.getItem("userId");
-  const userId = "abc12321";
+  const { state } = useContext(ShopContext);
+
+  const userId = state.currentUser._id;
 
   // FETCH details about the individual item
   useEffect(() => {
@@ -30,28 +36,42 @@ const ItemBig = () => {
       .then((data) => {
         console.log(data);
         setItem(data.data);
-        if (data.data.numInStock < 1){
+        if (data.data.numInStock < 1) {
           setOutOfStock(true);
+        } else {
+          setOutOfStock(false);
         }
       });
-
-    // CHECK that the user is logged in; if so, GET user ID to POST to
-    // the back-end, when they add an item to the cart. If no user logged-in,
-    // userID = "none" ?
   }, [id]);
 
   useEffect(() => {
     if (item) {
       fetch(`/api/get-brand-name/${item.companyId}`)
-      .then((res)=> res.json())
-      .then((data) => {
-        console.log(data);
-        steBrandName(data.data);
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          steBrandName(data.data);
+        });
+
+      fetch(`/api/all-items-in-cart/${userId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          data.data.items.forEach((element) => {
+            console.log(element.quantity > item.numInStock);
+            // console.log(item)
+            if (
+              element.itemId === item._id &&
+              element.quantity >= item.numInStock
+            ) {
+              setOutOfStock(true);
+            }
+          });
+        });
     }
-  }, [item]); 
+  }, [item]);
+
   // POST item to cart, when button is clicked
-  // ******** useReducer?
   const addToCart = (ev) => {
     ev.preventDefault();
 
@@ -61,58 +81,72 @@ const ItemBig = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        // userID, // note the capital
         user: userId,
-        item: id
+        item: id,
       }),
     })
       .then((res) => res.json())
       .then((data) => {
-        // show confirmation that it was added to the cart: MUI?
-        console.log(data);
+        // console.log(data.data.items);
+        data.data.items.forEach((element) => {
+          console.log(element.quantity > item.numInStock);
+          if (
+            element.itemId === item._id &&
+            element.quantity >= item.numInStock
+          ) {
+            setOutOfStock(true);
+          }
+          if (data.status === 201) {
+            setSnackbarOpen(true);
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      // .catch((err) => {
-      //   console.log(err);
-      // });
   };
 
   return (
     <>
-    {item &&
-      <>
-        <Wrapper>
-          <ImgDiv>
-            <Img alt="Item" src={item.imageSrc}/>
-          </ImgDiv>
-          <InfoDiv>
-            <Details>
-              {brandName &&
-              <BrandLink to={`/brands/${brandName}`} >
-                <CompanyId>{brandName}</CompanyId>
-              </BrandLink>
-              }
-              <ItemName>{item.name}</ItemName>
-              <ItemPrice>{item.price}</ItemPrice>
-              <AddToCartButton onClick={addToCart} disabled={outOfStock}>Add to Cart</AddToCartButton>
-              <DescriptionTitle>
-                DESCRIPTION
-              </DescriptionTitle>
-              <Hr/>
-              <Description>
-                  The worst wearables, all new. The worst wearables, all new. The worst
-                  wearables, all new. The worst wearables, all new. The worst wearables,
-                  all new. The worst wearables, all new. The worst wearables, all new. The
-                  worst wearables, all new. The worst wearables, all new. The worst
-                  wearables, all new.
-                  </Description>
-              {/* with dropdown capabilities? */}
-            </Details>
-          </InfoDiv>
-        </Wrapper>
-        <YouMayAlsoLike />
-              </>
-      }
+      <SnackbarComponent
+        message="Item added to cart"
+        snackbarOpen={snackbarOpen}
+        setSnackbarOpen={setSnackbarOpen}
+      />
 
+      {item && (
+        <>
+          <Wrapper>
+            <ImgDiv>
+              <Img alt="Item" src={item.imageSrc} />
+            </ImgDiv>
+            <InfoDiv>
+              <Details>
+                {brandName && (
+                  <BrandLink to={`/brands/${brandName}`}>
+                    <CompanyId>{brandName}</CompanyId>
+                  </BrandLink>
+                )}
+                <ItemName>{item.name}</ItemName>
+                <ItemPrice>{item.price}</ItemPrice>
+                <AddToCartButton onClick={addToCart} disabled={outOfStock}>
+                  Add to Cart
+                </AddToCartButton>
+                <DescriptionTitle>DESCRIPTION</DescriptionTitle>
+                <Hr />
+                <Description>
+                  The worst wearables, all new. The worst wearables, all new.
+                  The worst wearables, all new. The worst wearables, all new.
+                  The worst wearables, all new. The worst wearables, all new.
+                  The worst wearables, all new. The worst wearables, all new.
+                  The worst wearables, all new. The worst wearables, all new.
+                </Description>
+              </Details>
+            </InfoDiv>
+          </Wrapper>
+          <YouMayAlsoLike />
+        </>
+      )}
     </>
   );
 };
@@ -131,9 +165,9 @@ const ImgDiv = styled.div`
 `;
 
 const Img = styled.img`
-width: 70%;
-height: auto;
-object-fit: cover;
+  width: 70%;
+  height: auto;
+  object-fit: contain;
 `;
 
 const InfoDiv = styled.div`
@@ -143,8 +177,7 @@ const InfoDiv = styled.div`
   flex-direction: column;
 `;
 
-const Details = styled.div`
-`;
+const Details = styled.div``;
 
 const CompanyId = styled.p`
   text-decoration: none;
@@ -153,12 +186,12 @@ const CompanyId = styled.p`
 `;
 
 const BrandLink = styled(Link)`
-text-decoration: none;
+  text-decoration: none;
 `;
 
 const ItemName = styled.div`
-font-size: 40px;
-margin-bottom: 30px;
+  font-size: 40px;
+  margin-bottom: 30px;
 `;
 
 const ItemPrice = styled.div`
@@ -168,24 +201,24 @@ const ItemPrice = styled.div`
 `;
 
 const AddToCartButton = styled.button`
-width: 100%;
-height: 40px;
-background-color: black;
-color: white;
-font-weight: 700;
-font-size: 14px;
-margin-bottom: 30px;
-cursor: pointer;
+  width: 100%;
+  height: 40px;
+  background-color: black;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 30px;
+  cursor: pointer;
 
-&:disabled {
-filter: contrast(40%);
-};
+  &:disabled {
+    filter: contrast(40%);
+  }
 `;
 
 const Description = styled.div`
-line-height: 1.4;
-margin-bottom:s 30px;
-font-size: 15px;
+  line-height: 1.4;
+  margin-bottom: s 30px;
+  font-size: 15px;
 `;
 
 const Hr = styled.hr`
@@ -194,8 +227,7 @@ const Hr = styled.hr`
 `;
 
 const DescriptionTitle = styled.p`
-font-size: 20px;
+  font-size: 20px;
 `;
 
 export default ItemBig;
-

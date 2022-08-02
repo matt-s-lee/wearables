@@ -52,7 +52,7 @@ const Footer = () => {
 }
 
 const Wrapper = styled.footer`
-  height: fit-content;
+  height: 200px;
   padding: 24px 48px;
   display: flex;
 `

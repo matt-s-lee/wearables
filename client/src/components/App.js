@@ -21,6 +21,7 @@ import BrandsAllPage from "./BrandsAllPage";
 import CategoriesAllPage from "./CategoriesAllPage";
 import ReviewCartPage from "./ReviewCartPage";
 import OrderConfirmation from "./OrderConfirmation";
+import SearchPage from "./SearchPage";
 
 const App = () => {
   const {
@@ -49,9 +50,9 @@ const App = () => {
           <Routes>
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="/categories" element={<CategoriesAllPage />} />
-            <Route path="/categories/:category" element={<CategoryPage/>}/>
-            <Route exact path="/brands" element={<BrandsAllPage/>} />
-            <Route path="/brands/:brand" element={<BrandPage/>}/>
+            <Route path="/categories/:category" element={<CategoryPage />} />
+            <Route exact path="/brands" element={<BrandsAllPage />} />
+            <Route path="/brands/:brand" element={<BrandPage />} />
             <Route path="/new-arrivals" element={<NewArrivals />} />
             <Route exact path="/contact" element={<Contact />} />
             <Route path="/products" element={<ItemsPage />} />
@@ -62,10 +63,12 @@ const App = () => {
             <Route exact path="/checkout" element={<Checkout />} />
             <Route exact path="/review-cart" element={<ReviewCartPage />} />
             <Route exact path="/order-confirmation" element={<OrderConfirmation />} />
+            <Route exact path="/reviewcard" element={<ReviewCartPage />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="">404: Oops!</Route>
           </Routes>
-          <Footer />
         </Main>
+        <Footer />
       </BrowserRouter>
     );
   }
@@ -80,8 +83,8 @@ const App = () => {
 };
 
 const Main = styled.div`
-  height: calc(100vh - var(--header-height));
   font-family: var(--font);
+  min-height: calc(100vh - var(--header-height) - 220px);
 `;
 
 const Wrapper = styled.div`

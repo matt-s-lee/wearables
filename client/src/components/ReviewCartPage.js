@@ -1,24 +1,77 @@
 import { useEffect, useState } from "react";
-import { IoRemoveOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+
+import { IoAddSharp, IoRemoveOutline } from "react-icons/io5";
+import SnackbarComponent from "./SnackbarComponent";
 import styled from "styled-components";
+import {
+  YourCart,
+  ItemsNum,
+  EmptyCart,
+  Review,
+  ItemDetails,
+  ItemRow,
+  ItemHeader,
+  ItemData,
+  ItemName,
+  ItemPrice,
+  ItemPic,
+  ChangeQuantity,
+  Cost,
+  CostDetails,
+  CostRow,
+  CostTotal,
+  CostHeader,
+  CostData,
+  AddToCart,
+} from "./ReviewCartPage/reviewCartStyledComponents";
+
+import { addToCart } from "../handlers/addToCart";
+import PriceSummary from "./ReviewCartPage/PriceSummary";
+
+// ------------------------------------------------
 
 const ReviewCartPage = () => {
-  const [cartItems, setCartItems] = useState(null);
-  const [cartItemsArray, setCartItemsArray] = useState([]);
-  let cartItems1 = [];
-  console.log("cartItemsArray", cartItemsArray);
+  let navigate = useNavigate();
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // for Snackbar
+
+  const [cartItems, setCartItems] = useState(null); // Array of item ID #s
+  const [cartItemsArray, setCartItemsArray] = useState([]); // Array of item data
+  let cartItems1 = []; // empty array of items to be pushed into
+  let total = 0;
 
   const userId = "abc12321"; // hard-coded user, until we can create new users
 
+  //Calculate the total price of the order
+  const totalCost = () => {
+    if (cartItemsArray.length) {
+      cartItems.forEach((cartItem) => {
+        cartItemsArray.forEach((item) => {
+          if (item._id === cartItem.itemId) {
+            total =
+              total +
+              cartItem.quantity * parseFloat(item.price.replace("$", ""));
+          }
+        });
+      });
+    }
+    return total.toFixed(2);
+  };
+
+  // GET item ID #s of all items in the user's cart,
+  const getCartDetails = async () => {
+    const response = await fetch(`/api/all-items-in-cart/${userId}`);
+    const data = await response.json();
+    setCartItems(data.data.items);
+  };
+
+  // GET cart details on mount
   useEffect(() => {
-    const getCartDetails = async () => {
-      const response = await fetch(`/api/all-items-in-cart/${userId}`);
-      const data = await response.json();
-      setCartItems(data.data.items);
-    };
     getCartDetails();
   }, []);
 
+  // GET data for each item in the cart (using item ID #s received above)
   useEffect(() => {
     if (cartItems) {
       Promise.all(
@@ -34,6 +87,7 @@ const ReviewCartPage = () => {
     }
   }, [cartItems]);
 
+  // DELETE item from the cart
   const handleRemove = (_id) => {
     fetch("/api/delete-item-in-cart", {
       method: "DELETE",
@@ -47,105 +101,134 @@ const ReviewCartPage = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.status === 204) console.log(data);
+        console.log(data);
+        if (data.status === 200) {
+          setSnackbarOpen(true);
+          getCartDetails();
+        }
       });
   };
+
+  // ADD item to cart
+  const handleAdd = (_id) => {
+    fetch(`/api/add-item-in-cart/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user: userId,
+        item: _id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === 201) {
+          setSnackbarOpen(true);
+          getCartDetails();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // ------------------------------------------------
   return (
     <div>
+      <SnackbarComponent
+        message="Cart modified"
+        snackbarOpen={snackbarOpen}
+        setSnackbarOpen={setSnackbarOpen}
+      />
       {cartItems && (
         <YourCart>
-          Your shopping cart <span>({cartItems.length})</span>
+          Your Shopping Cart <ItemsNum>({cartItems.length})</ItemsNum>
         </YourCart>
       )}
-      {cartItemsArray && (
+      {cartItems && (
         <Review>
-          <ItemDetails>
-            <ItemRow>
-              <ItemHeader></ItemHeader>
-              <ItemHeader>Product</ItemHeader>
-              <ItemHeader>Price</ItemHeader>
-            </ItemRow>
-            {cartItemsArray.map((item) => {
-              return (
+          {/* Conditional rendering of Item Details table */}
+          {cartItems.length === 0 ? (
+            <EmptyCart>There is nothing in your cart</EmptyCart>
+          ) : (
+            <ItemDetails>
+              <tbody>
                 <ItemRow>
-                  <ItemData></ItemData>
-                  <ItemData>{item.name}</ItemData>
-                  <ItemData>{item.price}</ItemData>
-                  <ItemData>
-                    <button onClick={() => handleRemove(item._id)}>
-                      <IoRemoveOutline />
-                    </button>
-                  </ItemData>
+                  <ItemHeader></ItemHeader>
+                  <ItemHeader>PRODUCT</ItemHeader>
+                  <ItemHeader>PRICE</ItemHeader>
+                  <ItemHeader></ItemHeader>
+                  <ItemHeader>QUANTITY</ItemHeader>
+                  <ItemHeader></ItemHeader>
                 </ItemRow>
-              );
-            })}
-          </ItemDetails>
-          <Cost>
-            <CostDetails>
-              <tr>
-                <CostHeader>Subtotal</CostHeader>
-                <CostData>$1999</CostData>
-              </tr>
-              <tr>
-                <CostHeader>Tax</CostHeader>
-                <CostData>None</CostData>
-              </tr>
-              <tr>
-                <CostHeader>Shipping</CostHeader>
-                <CostData>None</CostData>
-              </tr>
-              <tr>
-                <CostHeader>Total Price</CostHeader>
-                <CostData>$199999</CostData>
-              </tr>
-            </CostDetails>
-            <AddToCart>Add to cart</AddToCart>
-          </Cost>
+                {cartItemsArray.map((item, index) => {
+                  return (
+                    <ItemRow key={item._id}>
+                      <ItemData>
+                        <ItemPic src={item.imageSrc} alt={item.name} />
+                      </ItemData>
+                      <ItemName>{item.name}</ItemName>
+                      <ItemPrice>{item.price}</ItemPrice>
+                      <ItemData>
+                        <ChangeQuantity onClick={() => handleRemove(item._id)}>
+                          <IoRemoveOutline />
+                        </ChangeQuantity>
+                      </ItemData>
+                      {cartItems.length === cartItemsArray.length && (
+                        <ItemData>{cartItems[index].quantity}</ItemData>
+                      )}
+                      <ItemData>
+                        <ChangeQuantity onClick={() => handleAdd(item._id)}>
+                          <IoAddSharp />
+                        </ChangeQuantity>
+                      </ItemData>
+                    </ItemRow>
+                  );
+                })}
+              </tbody>
+            </ItemDetails>
+          )}
+          {/* Conditional rendering of Subtotal Table if no items in cart */}
+          {cartItems.length === 0 ? (
+            <div></div>
+          ) : (
+            // <PriceSummary total={total} />
+            <Cost>
+              <CostDetails>
+                <tbody>
+                  <CostRow>
+                    <CostHeader>SUBTOTAL</CostHeader>
+                    <CostData>${(total = totalCost())}</CostData>
+                  </CostRow>
+                  <CostRow>
+                    <CostHeader>Tax</CostHeader>
+                    <CostData>None</CostData>
+                  </CostRow>
+                  <CostRow>
+                    <CostHeader>Shipping</CostHeader>
+                    <CostData>None</CostData>
+                  </CostRow>
+                  <CostTotal>
+                    <CostHeader>TOTAL PRICE</CostHeader>
+                    <CostData>${total}</CostData>
+                  </CostTotal>
+                </tbody>
+              </CostDetails>
+              <AddToCart
+                onClick={() => {
+                  navigate("/checkout");
+                }}
+              >
+                Proceed to Checkout
+              </AddToCart>
+            </Cost>
+          )}
         </Review>
       )}
     </div>
   );
 };
-
-const YourCart = styled.h2``;
-
-const Review = styled.div`
-  display: flex;
-`;
-
-const ItemDetails = styled.table`
-  border: 1px solid;
-  margin: 30px;
-`;
-
-const ItemRow = styled.tr`
-  border: 1px solid;
-
-  margin: 0px 40px;
-`;
-
-const ItemHeader = styled.th`
-  border: 1px solid;
-  width: 100px;
-`;
-
-const ItemData = styled.td`
-  border: 1px solid;
-`;
-
-const Cost = styled.div`
-  margin: 30px;
-`;
-
-const CostHeader = styled.th`
-  text-align: left;
-`;
-
-const CostData = styled.td`
-  text-align: right;
-`;
-
-const CostDetails = styled.table``;
-const AddToCart = styled.button``;
 
 export default ReviewCartPage;
