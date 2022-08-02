@@ -20,6 +20,7 @@ import LoadingScreen from "./LoadingScreen";
 import BrandsAllPage from "./BrandsAllPage";
 import CategoriesAllPage from "./CategoriesAllPage";
 import ReviewCartPage from "./ReviewCartPage";
+import OrderConfirmation from "./OrderConfirmation";
 import SearchPage from "./SearchPage";
 
 const App = () => {
@@ -60,6 +61,8 @@ const App = () => {
             <Route path="/item/:id" element={<ItemBig />} />
             <Route exact path="/signin" element={<Signin />} />
             <Route exact path="/checkout" element={<Checkout />} />
+            <Route exact path="/review-cart" element={<ReviewCartPage />} />
+            <Route exact path="/order-confirmation" element={<OrderConfirmation />} />
             <Route exact path="/reviewcard" element={<ReviewCartPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="">404: Oops!</Route>
