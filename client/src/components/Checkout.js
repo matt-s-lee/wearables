@@ -1,20 +1,20 @@
 import Address from "ipaddr.js";
-import { useState,useEffect } from "react";
+import { useState,useEffect, useDebugValue } from "react";
 import styled from "styled-components";
 import states from "../data/states";
-
+import OrderConfirmation from "./OrderConfirmation";
+import { useNavigate } from "react-router-dom";
 //shopping cart
 //a route
 const Checkout = () => {
   const [country, setCountry] = useState(null);
-
   const [cartItems, setCartItems] = useState(null);
   const [cartItemsArray,setCartItemsArray] = useState([]);
   const [flag,setFlag] = useState(false);
-  let total = 0;
-  let [finalSum,setFinalSum] = useState(0);
-  let price = 0;
-  let count = 0;
+  const [orderPlaced,setOrderPlaced] = useState(false);
+  let navigate = useNavigate();
+
+  let total =0;
   let cartItems1 = [];
 
   const userId = "abc12321"; // hard-coded user, until we can create new users
@@ -33,29 +33,31 @@ const Checkout = () => {
     //item details from the items collection
     useEffect(() =>{
       if(cartItems){
+        console.log(cartItems);
     Promise.all(cartItems.map(item =>
         fetch(`/api/item/${item.itemId}`).then(resp => resp.json())
     )).then(data => {
         data.forEach(function(obj){
-          cartItems1.push(obj)
+          cartItems1.push(obj.data)
         })
         setCartItemsArray(cartItems1)
     })
   }
-
-  //Calculate the total price fo the order
-  if(cartItemsArray){
-    cartItemsArray.forEach((item =>{
-       price = parseFloat((item.data.price).replace("$",''));
-       total = total+price;
-       setFinalSum(total);
-      count ++;
-    }))
-    if(count === cartItemsArray.length){
-     setFinalSum(total);
-    }
-  }
   },[cartItems])
+
+  const totalCost = () =>{
+      //Calculate the total price fo the order
+  if(cartItemsArray.length){
+    cartItems.forEach((cartItem) =>{
+      cartItemsArray.forEach((item) =>{
+        if(item._id === cartItem.itemId){
+          total = total+cartItem.quantity*parseFloat((item.price).replace("$",''))
+        }
+      })
+    })
+  }
+  return total.toFixed(2);
+  }
 
   //Method to set the country based on the country dropdown selection
   const selectCountry = (e) => {
@@ -66,6 +68,23 @@ const Checkout = () => {
     }
   };
 
+  const placeyourOrder = (e) =>{
+    e.preventDefault();
+    fetch("/api/add-order",{
+      method:"POST",
+      body:JSON.stringify({
+        items:cartItemsArray,
+      }),
+      headers:{
+        "Content-Type" : "application/json",
+      }
+    })   .then((res) => res.json())
+    .then((data) => {
+      // show confirmation that it was added to the orders
+      navigate(`/order-confirmation`);
+    });
+  }
+
   return (
     <>
     <Headings>
@@ -73,18 +92,18 @@ const Checkout = () => {
       <H2>Order summary</H2>
       </Headings>
       <Wrapper>
-        <Form>
+        <Form onSubmit={(e) => placeyourOrder(e)}>
           <Names>
             <FirstName>
-              <Input type="text" placeholder="First Name" required="" />
+              <Input type="text" placeholder="First Name" required />
             </FirstName>
             <LastName>
-              <Input type="text" placeholder="Last Name" required="" />
+              <Input type="text" placeholder="Last Name" required />
             </LastName>
           </Names>
 
           <Address1>
-            <Input type="text" id="address" placeholder="Street Address" />
+            <Input type="text" id="address" placeholder="Street Address" required/>
           </Address1>
 
           <Address2>
@@ -96,7 +115,7 @@ const Checkout = () => {
           </Address2>
 
           <Country>
-            <Select id="country" required="" onChange={(e) => selectCountry(e)}>
+            <Select id="country" required="" onChange={(e) => selectCountry(e)} required>
               <option value="" disabled selected>
                 Choose a Country
               </option>
@@ -105,7 +124,7 @@ const Checkout = () => {
             </Select>
           </Country>
           <State>
-            <Select id="state" required="">
+            <Select id="state" required>
               <option value="" disabled selected>
                 Select a Region
               </option>
@@ -129,7 +148,7 @@ const Checkout = () => {
           </Address2>
 
           <City>
-            <Input type="text" id="city" placeholder="City" />
+            <Input type="text" id="city" placeholder="City" required/>
           </City>
 
           <PostalCode>
@@ -137,14 +156,15 @@ const Checkout = () => {
               type="text"
               id="postalCode"
               placeholder="Postal Code/Pin Code"
+              required
             />
           </PostalCode>
 
           <PhoneNumber>
-            <Input type="text" id="number" placeholder="Phone" />
+            <Input type="text" id="number" placeholder="Phone" required/>
           </PhoneNumber>
 
-          <Button type="submit">NEXT: PAYMENT</Button>
+          <Button type="submit">PLACE YOUR ORDER</Button>
         </Form>
         <OrderSummary>
           <OrderDetails>
@@ -152,20 +172,24 @@ const Checkout = () => {
             cartItemsArray.map((item,index) =>{
              return(
                <Order>
-               <Img src = {item.data.imageSrc}/>
-               <Name>{item.data.name}</Name>
-               <Price>{item.data.price}</Price>
+               <Img src = {item.imageSrc}/>
+               <Name>{item.name}</Name>
+               {cartItems.map((cartItem) =>(
+                <PriceAndQuantity>{cartItem.itemId === item._id ? <><Quantity>x{cartItem.quantity}</Quantity>
+                <Price>${cartItem.quantity*parseFloat((item.price).replace("$",'')).toFixed(2)}</Price></>
+                :null}</PriceAndQuantity>
+               ))}
                </Order>
              )
             }):null}
           </OrderDetails>
           <Subtotal>
               <SubtotalHead>SUBTOTAL</SubtotalHead>
-              {finalSum !==0?<Sum>${finalSum}</Sum>:null}
+              <Sum>${totalCost()}</Sum>
             </Subtotal>
             <Subtotal>
               <SubtotalHead>SHIPPING</SubtotalHead>
-              {finalSum !==0?<Sum>$0</Sum>:null}
+              <Sum>$0</Sum>
             </Subtotal>
         </OrderSummary>
       </Wrapper>
@@ -245,19 +269,25 @@ border-top:1px solid black;
 margin: 10px 20px 10px 20px;
 `
 const Name = styled.div`
-margin: 50px 20px 20px 20px;
+margin: 50px 0px 20px 0px;
+width:400px;
 `;
 const Img = styled.img`
  margin: 10px 20px 20px 0px;`;
  
 const Price = styled.div`
-margin: 50px 20px 20px 20px;
+margin: 50px 0px 20px 0px;
 align-items:right;
 `;
+
+const Quantity = styled.div`
+margin: 50px 0px 20px 0px;
+`
 const Order = styled.div`
 display:flex;
 justify-content:space-between;
 margin: 10px 20px 10px 20px;
+flex-wrap:nowrap;
 `
 const Subtotal = styled.div`
 display:flex;
@@ -283,5 +313,8 @@ const Headings = styled.div`
 display:flex;
 gap:41%;
 `
-
+const PriceAndQuantity = styled.div`
+display:flex;
+gap : 20px;
+`
 export default Checkout;
