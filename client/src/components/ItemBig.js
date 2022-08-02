@@ -3,6 +3,9 @@ import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ShopContext } from "./ShopContext";
 import YouMayAlsoLike from "./YouMayAlsoLike";
+import { IoIosClose } from "react-icons/io";
+import Snackbar from "@mui/material/Snackbar";
+
 // PAGE COMPONENT for each individual item
 //individual page for each item
 //a route
@@ -15,6 +18,8 @@ const ItemBig = () => {
 
   //useState for outOfStock
   const [outOfStock, setOutOfStock] = useState(false);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // for Snackbar
 
   // GET item ID # from URL
   const { id } = useParams();
@@ -93,6 +98,9 @@ const ItemBig = () => {
           if (element.itemId === item._id && element.quantity >= item.numInStock) {
             setOutOfStock(true);
           }
+          if (data.status === 201) {
+            setSnackbarOpen(true);
+          }
         });
       })
       .catch((err) => {
@@ -100,8 +108,28 @@ const ItemBig = () => {
       });
   };
 
+  // CLOSE snackbar
+  const handleCloseSnackbar = (ev, reason) => {
+    setSnackbarOpen(false);
+  };
+  const action = (
+    <>
+      <Button onClick={handleCloseSnackbar}>
+        <IoIosClose fontSize="20px" color="white" />
+      </Button>
+    </>
+  );
+
   return (
     <>
+    <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={2500}
+        message="Item added to cart"
+        onClose={handleCloseSnackbar}
+        action={action}
+      />
+    
     {item &&
       <>
         <Wrapper>
@@ -157,7 +185,7 @@ const ImgDiv = styled.div`
 const Img = styled.img`
 width: 70%;
 height: auto;
-object-fit: cover;
+object-fit: contain;
 `;
 
 const InfoDiv = styled.div`
@@ -219,6 +247,12 @@ const Hr = styled.hr`
 
 const DescriptionTitle = styled.p`
 font-size: 20px;
+`;
+
+// Snackbar
+const Button = styled.button`
+  background: none;
+  border: none;
 `;
 
 export default ItemBig;
