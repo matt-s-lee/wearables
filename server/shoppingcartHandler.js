@@ -133,6 +133,7 @@ const deleteItemInCart = async (req, res) => {
 
       // check if a shopping cart for this user exist
       if (result) {
+        console.log(result)
         // check if item in shopping cart
         let itemIndex = -1;
         result.items.forEach((element, index) => {
@@ -157,9 +158,9 @@ const deleteItemInCart = async (req, res) => {
             .collection("shoppingcarts")
             .updateOne({ _id }, { $set: result });
           res
-            .status(204)
+            .status(200)
             .json({
-              status: 204,
+              status: 200,
               data: result,
               message: "item successfully deleted",
             });
