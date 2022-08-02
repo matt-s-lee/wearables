@@ -6,7 +6,12 @@ const initialState = {
   load: false,
   brands: null,
   categories: null,
-  currentUser: null,
+  currentUser: {
+    "_id": "abc12321",
+    "firstName": "Tom",
+    "lastName": "Smith",
+    "email": "tom_smith@gmail.com",
+  },
 
 }
 
