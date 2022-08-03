@@ -54,6 +54,7 @@ const Wrapper = styled.footer`
   height: 200px;
   padding: 24px 48px;
   display: flex;
+  font-family: var(--font);
 `;
 
 const FooterLeft = styled.div`

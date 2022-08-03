@@ -23,8 +23,10 @@ const getAllOrders = async (req, res) => {
   const userId = req.params.user;
   //Find the order by userIdfrom orders
   const result = await db.collection("orders").find().toArray();
-  if (result) {
-    res.status(200).json({ status: 200, data: result });
+  //Filter orders with userId
+  const resultsFilter = result.filter(order => order.userId === userId)
+  if (resultsFilter) {
+    res.status(200).json({ status: 200, data: resultsFilter });
   } else {
     res.status(404).json({ status: 404, message: "Result is empty" });
   }
