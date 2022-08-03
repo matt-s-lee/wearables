@@ -8,21 +8,22 @@ import LoadingScreen from "./LoadingScreen";
 //a route
 const BrandPage = () => {
   const brand = useParams().brand;
-  const [items, setItems] = useState(null)
+  const [items, setItems] = useState(null);
+  const [loadingState, setLoadingState] = useState("loading");
 
   useEffect(() => {
-    console.log(brand)
+    setLoadingState("loading")
     fetch(`/api/items-by-brand/${brand}`)
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         setItems(data.data);
+        setLoadingState("idle")
       })  
   }, [brand])
 
 
 
-  if (items !== null) {
+  if (items && loadingState === "idle") {
     return (
       <Wrapper>
         {items.map(item => {
