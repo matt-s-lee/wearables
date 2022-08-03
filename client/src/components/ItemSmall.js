@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { underline, underlineTransition } from "./underline";
 
 const ItemSmall = ({ imageSrc, name, price, companyId, id }) => {
   let navigate = useNavigate();
   const [brandName, setBrandName] = useState("");
+  console.log(brandName);
 
   const handleClickItem = (ev) => {
     ev.preventDefault();
     navigate(`/item/${id}`);
+    window.scrollTo(0, 0);
+    setBrandName("");
   };
 
   useEffect(() => {
@@ -27,9 +31,10 @@ const ItemSmall = ({ imageSrc, name, price, companyId, id }) => {
         <Image src={imageSrc} alt={name} />
         <Name>{name}</Name>
         <Company
-          onClick={(e) => {
+          onClick={(ev) => {
+            ev.preventDefault();
             navigate(`/brands/${brandName}`);
-            e.stopPropagation();
+            ev.stopPropagation();
           }}
         >
           {brandName.toUpperCase()}
@@ -64,6 +69,10 @@ const Image = styled.img`
 
 const Company = styled.div`
   font-weight: 900;
+  transition: transform 0.2s;
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const Name = styled.div`
