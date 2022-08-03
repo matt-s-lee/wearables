@@ -1,9 +1,11 @@
 import Address from "ipaddr.js";
-import { useState,useEffect, useDebugValue } from "react";
+import { useState,useEffect, useContext } from "react";
 import styled from "styled-components";
 import states from "../data/states";
 import OrderConfirmation from "./OrderConfirmation";
 import { useNavigate } from "react-router-dom";
+import { ShopContext } from "./ShopContext";
+
 //shopping cart
 //a route
 const Checkout = () => {
@@ -17,7 +19,9 @@ const Checkout = () => {
   let total =0;
   let cartItems1 = [];
 
-  const userId = "abc12321"; // hard-coded user, until we can create new users
+  // GET userId from ShopContext
+  const { state } = useContext(ShopContext);
+  const userId = state.currentUser._id;
 
   //Get all the items in the cart of the user
   useEffect(() =>{
@@ -233,9 +237,6 @@ const Input = styled.input`
   width: calc(100% - 40px);
   margin: 10px 20px 10px 20px;
   font-family: var(--font);
-   {
-    word-break: break-all;
-  }
 `;
 const Address2 = styled.div``;
 const Address1 = styled.div``;
