@@ -15,20 +15,23 @@ const options = {
 const getOneUser = async (req, res) => {
     const user = url.parse(req.url, true).query;
     console.log(user);
-    //check if both email and password are present
-    if (user.email && user.password) {
+
+    const client = new MongoClient(MONGO_URI, options);
+    try {
+        // connect to the client
+        await client.connect();
+        // connect to the database 
         // creates a new client
-        const client = new MongoClient(MONGO_URI, options);
-        try {
-            // connect to the client
-            await client.connect();
-            // connect to the database 
-            const db = client.db("EcommerceGroupProject");
+        const db = client.db("EcommerceGroupProject");
+        //check if both email and password are present
+        if (user.email && user.password && !user.userId) {
+           
+
             //find user
-            const result = await db.collection("users").findOne({email: user.email});
+            const result = await db.collection("users").findOne({ email: user.email });
 
             // check if the user is found
-            if (result) { 
+            if (result) {
                 // check if the provided password matches
                 // the one in the database
                 if (user.password === result.password) {
@@ -39,15 +42,25 @@ const getOneUser = async (req, res) => {
             } else {
                 res.status(404).json({ status: 404, message: `user not found` });
             }
-            // close the connection to the database server
-            client.close();
-        } catch (err) {
-            res.status(500).json({ status: 500, message: err.message });
+        //check if login by user id
+        } else if (user.userId && !user.email && !user.password) {
+            //find user based on _id
+            const result = await db.collection("users").findOne({ _id: user.userId });
+            //check if there a result
+            if (result) {
+                res.status(200).json({ status: 200, data: result });
+            } else {
+                res.status(404).json({ status: 404, message: `user not found` });
+            }
+        } else {
+            res.status(422).json({ status: 422, message: "missing information" })
         }
-    } else {
-        res.status(422).json({ status: 422, message: "missing information" })
+    } catch (err) {
+        res.status(500).json({ status: 500, message: err.message });
+    } finally {
+        client.close();
     }
-    
+
 }
 
 const addUser = async (req, res) => {
@@ -64,10 +77,10 @@ const addUser = async (req, res) => {
             // connect to the database 
             const db = client.db("EcommerceGroupProject");
             //find user
-            const result = await db.collection("users").findOne({email: user.email});
+            const result = await db.collection("users").findOne({ email: user.email });
 
             // check if the user already exist
-            if (!result) { 
+            if (!result) {
                 await db.collection("users").insertOne(user);
                 res.status(201).json({ status: 201, message: "user successfully added" });
             } else {

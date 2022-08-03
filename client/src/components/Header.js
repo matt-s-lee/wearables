@@ -54,7 +54,7 @@ const Header = () => {
             <List>
               {state.brands.sort().map(brand => {
                 return (
-                  <DropWrapper>
+                  <DropWrapper key={brand}>
                     <ListItem to={`/brands/${brand}`}>
                       <ListAfter>
                         {brand}
@@ -74,7 +74,7 @@ const Header = () => {
             <List>
               {state.categories.sort().map(category => {
                 return (
-                  <DropWrapper>
+                  <DropWrapper key={category}>
                     <ListItem to={`/categories/${category}`}>
                       <ListAfter>
                         {category}
@@ -145,7 +145,7 @@ const Logo = styled(NavLink)`
   color: black;
   text-align: center;
   position: relative;
-  left: 4%;
+  left: 90px;
 `
 
 const Collection = styled.div`

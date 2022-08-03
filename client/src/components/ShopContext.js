@@ -49,6 +49,7 @@ export const ShopContenxtProvider = ({ children }) => {
       user: data,
     })
   }
+  
 
   return (
     <ShopContext.Provider

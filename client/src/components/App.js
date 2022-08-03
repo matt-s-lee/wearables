@@ -26,7 +26,7 @@ import SearchPage from "./SearchPage";
 const App = () => {
   const {
     state,
-    actions: { handleCategoryAndBrandLoad },
+    actions: { handleCategoryAndBrandLoad, handleUserLogin },
   } = useContext(ShopContext);
 
   //fetch category and brands for header
@@ -40,6 +40,27 @@ const App = () => {
     })
     // eslint-disable-next-line
   }, [])
+
+  useEffect(() => {
+    const savedUserId = JSON.parse(window.localStorage.getItem("userId"))
+    console.log("save", savedUserId)
+    if (savedUserId){
+      fetch(`/api/user?userId=${savedUserId}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        handleUserLogin(data.data)
+      })
+    }
+    // eslint-disable-next-line
+  }, [])
+
+  useEffect(() => {
+    if(state.currentUser){
+      window.localStorage.setItem("userId", JSON.stringify(state.currentUser._id));
+    }
+    // eslint-disable-next-line
+  }, [state.currentUser])
 
   if (state.load) {
     return (
