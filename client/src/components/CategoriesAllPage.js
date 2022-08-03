@@ -3,22 +3,22 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { ShopContext } from "./ShopContext";
 import { underline, underlineTransition } from "./underline";
-
+import banner1 from "../data/banner1.jpeg";
+import Banner from "./Banner";
 
 //all cateroies page
 //a route
 
 //missing some styling in letter and item
-
 const CategoriesAllPage = () => {
   const { state } = useContext(ShopContext);
-
 
   //sorting categories alphabetically 
   const sortByLetter = state.categories.sort();
 
   return (
     <Wrapper>
+      <Banner imageSrc={banner1} text="All Categories"/>
       <ItemList>
         {/* mapping array assigned to letter */}
         {sortByLetter.map(category => {
@@ -39,10 +39,12 @@ const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   padding: 0 var(--padding-page);
+  justify-content: center;
 `
 
 const ItemList = styled.div`
-
+width: 50vw;
+font-size: 24px;
 `
 
 const Item = styled(NavLink)`
@@ -64,6 +66,8 @@ const ItemAfter = styled.div`
 
   }
 `
+const Img = styled.img`
+`;
 
 export default CategoriesAllPage;
 
