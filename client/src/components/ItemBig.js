@@ -6,6 +6,7 @@ import YouMayAlsoLike from "./YouMayAlsoLike";
 
 import Snackbar from "@mui/material/Snackbar";
 import SnackbarComponent from "./SnackbarComponent";
+import LoadingScreen from "./LoadingScreen";
 
 // PAGE COMPONENT for each individual item
 // a route
@@ -22,6 +23,7 @@ const ItemBig = () => {
 
   const [buttonMessage, setButtonMessage] = useState("")//for button message
 
+  const [loadingState, setLoadingState] = useState("loading")
   // GET item ID # from URL
   const { id } = useParams();
 
@@ -34,6 +36,7 @@ const ItemBig = () => {
 
   // FETCH details about the individual item
   useEffect(() => {
+    setLoadingState("loading");
     fetch(`/api/item/${id}`)
       .then((res) => res.json())
       .then((data) => {
@@ -46,9 +49,9 @@ const ItemBig = () => {
           setOutOfStock(false);
           setButtonMessage("ADD TO CART");
         }
-      });
+      }); 
   }, [id]);
-
+//GET brand name
   useEffect(() => {
     if (item) {
       fetch(`/api/get-brand-name/${item.companyId}`)
@@ -56,6 +59,7 @@ const ItemBig = () => {
         .then((data) => {
           console.log(data);
           steBrandName(data.data);
+          setLoadingState("idle");
         });
       if (currentUser){
       fetch(`/api/all-items-in-cart/${currentUser._id}`)
@@ -122,7 +126,7 @@ const ItemBig = () => {
         setSnackbarOpen={setSnackbarOpen}
       />
 
-      {item && (
+      {(item && loadingState==="idle") ?
         <>
           <Wrapper>
             <ImgDiv>
@@ -156,7 +160,9 @@ const ItemBig = () => {
           </Wrapper>
           <YouMayAlsoLike />
         </>
-      )}
+        : <LoadWrapper>
+            <LoadingScreen />
+          </LoadWrapper>}
     </>
   );
 };
@@ -249,6 +255,11 @@ const Hr = styled.hr`
 
 const DescriptionTitle = styled.p`
   font-size: 20px;
+`;
+
+const LoadWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 export default ItemBig;
