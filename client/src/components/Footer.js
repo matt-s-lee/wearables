@@ -3,9 +3,7 @@ import styled, { css } from "styled-components";
 import { underline, underlineTransition } from "./underline";
 import { HiLocationMarker, HiPhone, HiMail } from "react-icons/hi";
 
-
 const Footer = () => {
-
   return (
     <Wrapper>
       <FooterLeft>
@@ -40,45 +38,45 @@ const Footer = () => {
         </ContactWrapper>
       </FooterMiddle>
       <FooterRight>
-        <About>
-          About the Company
-        </About>
+        <About>About the Company</About>
         <AboutText>
-          Wearless is not place where we do not recommend our products. It a place with the most outrageous prices and pictures that will make dream of having, but you cannot. Wearless, where we make the customer very unsatisfied.
+          Wearless is a place where we do not recommend our products. It is a
+          store with the most outrageous prices and pictures that will make you
+          dream of having our products - but you cannot ever have them.
+          Wearless: where the best customer is a customer deeply unsatisfied.
         </AboutText>
       </FooterRight>
     </Wrapper>
-  )
-}
+  );
+};
 
 const Wrapper = styled.footer`
   height: 200px;
   padding: 24px 48px;
   display: flex;
-`
+`;
 
 const FooterLeft = styled.div`
   width: 35%;
-`
+`;
 
 const Title = styled.div`
   font-family: var(--font-logo);
   font-size: 24px;
-`
+`;
 
 const FooterMiddle = styled.div`
   width: 35%;
-`
+`;
 
 const FooterRight = styled.div`
   width: 30%;
-`
+`;
 
 const FooterLinks = styled.div`
   margin: 20px 0 12px;
   display: flex;
-  
-`
+`;
 
 const Nav = styled(NavLink)`
   text-decoration: none;
@@ -92,22 +90,22 @@ const Nav = styled(NavLink)`
   &:hover:after {
     ${underlineTransition}
   }
-`
+`;
 
 const FooterCompanyName = styled.div`
   font-style: italic;
   font-size: 12px;
-`
+`;
 
 const ContactWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 5px 0;
-`
+`;
 
 const Contact = styled.div`
   padding: 5px;
-`
+`;
 
 const IconWrapper = styled.div`
   border-radius: 50%;
@@ -119,17 +117,17 @@ const IconWrapper = styled.div`
     width: 25px;
     fill: white;
   }
-`
+`;
 
 const About = styled.div`
   font-weight: bold;
   border-bottom: 1px solid black;
   margin-bottom: 10px;
-`
+`;
 
 const AboutText = styled.div`
   font-style: italic;
   line-height: 1.2;
-`
+`;
 
 export default Footer;
