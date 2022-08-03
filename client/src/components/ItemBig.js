@@ -20,6 +20,8 @@ const ItemBig = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false); // for Snackbar
 
+  const [buttonMessage, setButtonMessage] = useState("")//for button message
+
   // GET item ID # from URL
   const { id } = useParams();
 
@@ -39,8 +41,10 @@ const ItemBig = () => {
         setItem(data.data);
         if (data.data.numInStock < 1) {
           setOutOfStock(true);
+          setButtonMessage("NOT AVAILABLE");
         } else {
           setOutOfStock(false);
+          setButtonMessage("ADD TO CART");
         }
       });
   }, [id]);
@@ -66,6 +70,7 @@ const ItemBig = () => {
               element.quantity >= item.numInStock
             ) {
               setOutOfStock(true);
+              setButtonMessage("NOT AVAILABLE");
             }
           });
         })};
@@ -96,6 +101,7 @@ const ItemBig = () => {
             element.quantity >= item.numInStock
           ) {
             setOutOfStock(true);
+            setButtonMessage("NOT AVAILABLE");
           }
           if (data.status === 201) {
             setSnackbarOpen(true);
@@ -106,6 +112,7 @@ const ItemBig = () => {
         console.log(err);
       });
   }};
+
 
   return (
     <>
@@ -132,7 +139,7 @@ const ItemBig = () => {
                 <ItemPrice>{item.price}</ItemPrice>
                 {currentUser ?
                 <AddToCartButton onClick={addToCart} disabled={outOfStock}>
-                  Add to Cart
+                  {buttonMessage}
                 </AddToCartButton> :
                 <PleaseSignIn>Please sign in to enable add-to-cart button.</PleaseSignIn>}
                 <DescriptionTitle>DESCRIPTION</DescriptionTitle>
