@@ -27,13 +27,11 @@ const OrderHistory = () => {
     return (
       <Wrapper>
         {orders.map(order => {
-          console.log(order)
           return (
-            <Order> 
+            <Order key={order.orderId}> 
               <OrderId>{`Order Number: ${order.OrderId}`}</OrderId>
               <ItemList>
                 {order.items.map((item, index) => {
-                    // console.log(item)
                   return (
                     <div></div>
                   )

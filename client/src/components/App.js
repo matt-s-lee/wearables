@@ -35,26 +35,26 @@ const App = () => {
       fetch("/api/all-categories").then((res) => res.json()),
       fetch("/api/all-brands").then((res) => res.json()),
     ]).then((data) => {
-      console.log(data)
       handleCategoryAndBrandLoad(data)
     })
     // eslint-disable-next-line
   }, [])
 
+
+  //get user id from local storage and fetch user data 
   useEffect(() => {
     const savedUserId = JSON.parse(window.localStorage.getItem("userId"))
-    console.log("save", savedUserId)
     if (savedUserId){
       fetch(`/api/user?userId=${savedUserId}`)
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         handleUserLogin(data.data)
       })
     }
     // eslint-disable-next-line
   }, [])
 
+  //save user id in local storage when user is signed in
   useEffect(() => {
     if(state.currentUser){
       window.localStorage.setItem("userId", JSON.stringify(state.currentUser._id));
@@ -62,6 +62,7 @@ const App = () => {
     // eslint-disable-next-line
   }, [state.currentUser])
 
+  //conditional render based on load from fetch
   if (state.load) {
     return (
       <BrowserRouter>
