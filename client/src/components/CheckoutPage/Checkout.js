@@ -117,10 +117,11 @@ const Checkout = () => {
     setPhoneErr(false);
     setClicked(true);
     e.preventDefault();
+    //check if phone number is valid. giving regex phone number format to check if it matches with the phone number entered, if its valid continues to post the order and goes to the order confirmation
     let phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
     if(phone.match(phoneno))
        {
-         console.log("I am here")
+    console.log("I am here")
     fetch("/api/add-order", {
       method: "POST",
       body: JSON.stringify({
@@ -136,6 +137,7 @@ const Checkout = () => {
         navigate(`/order-confirmation`);
       });
   }
+  //if the phone number doesn't match with the expected format, setPhoneErr to true
   else{
     setPhoneErr(true);
   }
