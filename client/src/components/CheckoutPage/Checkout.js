@@ -1,11 +1,40 @@
-import Address from "ipaddr.js";
 import { useState, useEffect, useContext } from "react";
-import styled from "styled-components";
-import states from "../data/states";
-import OrderConfirmation from "./OrderConfirmation";
+import states from "../../data/states";
 import { useNavigate } from "react-router-dom";
-import { ShopContext } from "./ShopContext";
-import LoadingScreen from "./LoadingScreen";
+import { ShopContext } from "../ShopContext";
+import LoadingScreen from "../LoadingScreen";
+import {
+  Headings,
+  H1,
+  H2,
+  Wrapper,
+  Form,
+  Names,
+  FirstName,
+  LastName,
+  Input,
+  Address1,
+  Address2,
+  Country,
+  State,
+  Select,
+  City,
+  PostalCode,
+  PhoneNumber,
+  Button,
+  OrderSummary,
+  OrderDetails,
+  Order,
+  Img,
+  Name,
+  PriceAndQuantity,
+  Quantity,
+  Price,
+  Subtotal,
+  SubtotalHead,
+  Sum,
+  Error
+} from "./checkoutStyledComponents";
 
 //shopping cart
 //a route
@@ -13,8 +42,10 @@ const Checkout = () => {
   const [country, setCountry] = useState(null);
   const [cartItems, setCartItems] = useState(null);
   const [cartItemsArray, setCartItemsArray] = useState([]);
-  const [flag, setFlag] = useState(false);
-  const [orderPlaced, setOrderPlaced] = useState(false);
+  const [phone,setPhone] = useState(null);
+  const [phoneErr,setPhoneErr] = useState(false);
+  const [clicked,setClicked] = useState(false);
+
   let navigate = useNavigate();
 
   let total = 0;
@@ -27,30 +58,31 @@ const Checkout = () => {
   //Get all the items in the cart of the user
   useEffect(() => {
     const getCartDetails = async () => {
-      const response = await fetch(`/api/all-items-in-cart/${userId._id}`)
+      const response = await fetch(`/api/all-items-in-cart/${userId._id}`);
       const data = await response.json();
       setCartItems(data.data.items);
     };
-    if (userId){
+    if (userId) {
       getCartDetails();
     }
   }, []);
 
-  //Iterate through the items in the cart of the user and fetch the 
+  //Iterate through the items in the cart of the user and fetch the
   //item details from the items collection
   useEffect(() => {
     if (cartItems) {
-      console.log(cartItems);
-      Promise.all(cartItems.map(item =>
-        fetch(`/api/item/${item.itemId}`).then(resp => resp.json())
-      )).then(data => {
+      Promise.all(
+        cartItems.map((item) =>
+          fetch(`/api/item/${item.itemId}`).then((resp) => resp.json())
+        )
+      ).then((data) => {
         data.forEach(function (obj) {
-          cartItems1.push(obj.data)
-        })
-        setCartItemsArray(cartItems1)
-      })
+          cartItems1.push(obj.data);
+        });
+        setCartItemsArray(cartItems1);
+      });
     }
-  }, [cartItems])
+  }, [cartItems]);
 
   const totalCost = () => {
     //Calculate the total price fo the order
@@ -58,13 +90,15 @@ const Checkout = () => {
       cartItems.forEach((cartItem) => {
         cartItemsArray.forEach((item) => {
           if (item._id === cartItem.itemId) {
-            total = total + cartItem.quantity * parseFloat((item.price).replace("$", ''))
+            total =
+              total +
+              cartItem.quantity * parseFloat(item.price.replace("$", ""));
           }
-        })
-      })
+        });
+      });
     }
     return total.toFixed(2);
-  }
+  };
 
   //Method to set the country based on the country dropdown selection
   const selectCountry = (e) => {
@@ -75,8 +109,18 @@ const Checkout = () => {
     }
   };
 
+  const phonenum = (e) =>{
+    setPhone(e.target.value);
+  }
+  //When place your order button is clicked, this method gets called and adds the order placed the orders db collection
   const placeyourOrder = (e) => {
+    setPhoneErr(false);
+    setClicked(true);
     e.preventDefault();
+    let phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if(phone.match(phoneno))
+       {
+         console.log("I am here")
     fetch("/api/add-order", {
       method: "POST",
       body: JSON.stringify({
@@ -84,14 +128,21 @@ const Checkout = () => {
       }),
       headers: {
         "Content-Type": "application/json",
-      }
-    }).then((res) => res.json())
+      },
+    })
+      .then((res) => res.json())
       .then((data) => {
         // show confirmation that it was added to the orders
         navigate(`/order-confirmation`);
       });
   }
+  else{
+    setPhoneErr(true);
+  }
+}
 
+  //If cartItemsArray is not empty, form is rendered
+  //Form has input firstname, lastname,street address,apartment,country,city,pin code, phone and button to place the order
   if (cartItemsArray.length > 0) {
     return (
       <>
@@ -111,7 +162,12 @@ const Checkout = () => {
             </Names>
 
             <Address1>
-              <Input type="text" id="address" placeholder="Street Address" required />
+              <Input
+                type="text"
+                id="address"
+                placeholder="Street Address"
+                required
+              />
             </Address1>
 
             <Address2>
@@ -138,12 +194,12 @@ const Checkout = () => {
                 </option>
                 {country !== null
                   ? states[country].map((state) => {
-                    return (
-                      <>
-                        <option value={state.name}>{state.name}</option>
-                      </>
-                    );
-                  })
+                      return (
+                        <>
+                          <option value={state.name}>{state.name}</option>
+                        </>
+                      );
+                    })
                   : null}
               </Select>
             </State>
@@ -169,27 +225,45 @@ const Checkout = () => {
             </PostalCode>
 
             <PhoneNumber>
-              <Input type="text" id="number" placeholder="Phone" required />
+              <Input
+                type="tel"
+                id="phone"
+                placeholder="Format: 123-456-7890"
+                onChange={(e) => phonenum(e)}
+              >
+              </Input>
             </PhoneNumber>
-
+            {clicked === true && phoneErr === true?<Error>Please Enter Valid Phone Number</Error>:null}
             <Button type="submit">PLACE YOUR ORDER</Button>
           </Form>
           <OrderSummary>
             <OrderDetails>
-              {cartItemsArray !== null ?
-                cartItemsArray.map((item, index) => {
-                  return (
-                    <Order>
-                      <Img src={item.imageSrc} />
-                      <Name>{item.name}</Name>
-                      {cartItems.map((cartItem) => (
-                        <PriceAndQuantity>{cartItem.itemId === item._id ? <><Quantity>x{cartItem.quantity}</Quantity>
-                          <Price>${cartItem.quantity * parseFloat((item.price).replace("$", '')).toFixed(2)}</Price></>
-                          : null}</PriceAndQuantity>
-                      ))}
-                    </Order>
-                  )
-                }) : null}
+              {cartItemsArray !== null
+                ? cartItemsArray.map((item, index) => {
+                    return (
+                      <Order>
+                        <Img src={item.imageSrc} />
+                        <Name>{item.name}</Name>
+                        {cartItems.map((cartItem) => (
+                          <PriceAndQuantity>
+                            {cartItem.itemId === item._id ? (
+                              <>
+                                <Quantity>x{cartItem.quantity}</Quantity>
+                                <Price>
+                                  $
+                                  {cartItem.quantity *
+                                    parseFloat(
+                                      item.price.replace("$", "")
+                                    ).toFixed(2)}
+                                </Price>
+                              </>
+                            ) : null}
+                          </PriceAndQuantity>
+                        ))}
+                      </Order>
+                    );
+                  })
+                : null}
             </OrderDetails>
             <Subtotal>
               <SubtotalHead>SUBTOTAL</SubtotalHead>
@@ -203,132 +277,13 @@ const Checkout = () => {
         </Wrapper>
       </>
     );
-  }
-  else {
+  } else {
     return (
       <Wrapper load="true">
         <LoadingScreen />
       </Wrapper>
-    )
+    );
   }
 };
 
-const Wrapper = styled.div`
-  font-family: var(--font);
-  margin: 0 24px;
-  box-sizing: border-box;
-  display: flex;
-
-`;
-const H1 = styled.h1`
-  font-size: 24px;
-  padding: 15px 24px;
-  font-family: var(--font);
-  margin: 0 24px;
-`;
-const Form = styled.form`
-  box-sizing: border-box;
-  border: 1px solid #E8E8E8;
-  width: 50%;
-  font-family: var(--font);
-  margin: 0 24px;
-  height:630px;
-`;
-
-const Names = styled.div`
-  display: flex;
-`;
-const FirstName = styled.div`
-  width: 50%;
-`;
-const LastName = styled.div`
-  width: 50%;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  width: calc(100% - 40px);
-  margin: 10px 20px 10px 20px;
-  font-family: var(--font);
-`;
-const Address2 = styled.div``;
-const Address1 = styled.div``;
-const Country = styled.div``;
-const Select = styled.select`
-  padding: 10px;
-  width: calc(100% - 40px);
-  margin: 10px 20px 10px 20px;
-  font-family: var(--font);
-`;
-const State = styled.div``;
-const City = styled.div``;
-const PostalCode = styled.div``;
-const PhoneNumber = styled.div``;
-const Button = styled.button`
-font-family: var(--font);
-  padding: 10px;
-  width: calc(100% - 40px);
-  margin: 10px 20px 10px 20px;
-  border: none;
-  background: #ffa500;
-  &:hover {
-    color: white;
-  }
-`;
-
-const OrderSummary = styled.div``;
-const OrderDetails = styled.div`
-border-bottom:1px solid black;
-border-top:1px solid black;
-margin: 10px 20px 10px 20px;
-`
-const Name = styled.div`
-margin: 50px 0px 20px 0px;
-width:400px;
-`;
-const Img = styled.img`
-  margin: 10px 20px 20px 0px;`;
-
-const Price = styled.div`
-margin: 50px 0px 20px 0px;
-align-items:right;
-`;
-
-const Quantity = styled.div`
-margin: 50px 0px 20px 0px;
-`
-const Order = styled.div`
-display:flex;
-justify-content:space-between;
-margin: 10px 20px 10px 20px;
-flex-wrap:nowrap;
-`
-const Subtotal = styled.div`
-display:flex;
-margin: 10px 20px 10px 20px;
-gap : 500px;
-border-bottom: 1px solid #E8E8E8;
-`
-const SubtotalHead = styled.div`
-margin: 10px 20px 10px 20px;
-font-size: 20px;
-`
-const Sum = styled.div`
-margin: 10px 20px 10px 20px;
-`
-const H2 = styled.h1`
-  font-size: 24px;
-  padding: 15px 24px;
-  font-family: var(--font);
-  margin: 0 24px;
-`;
-
-const Headings = styled.div`
-display:flex;
-gap:41%;
-`
-const PriceAndQuantity = styled.div`
-display:flex;
-gap : 20px;
-`
 export default Checkout;
