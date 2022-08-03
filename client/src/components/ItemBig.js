@@ -27,7 +27,8 @@ const ItemBig = () => {
   // const userId = localStorage.getItem("userId");
   const { state } = useContext(ShopContext);
 
-  const userId = state.currentUser._id;
+  let currentUser = state.currentUser;
+  // const userId = "abc12321";
 
   // FETCH details about the individual item
   useEffect(() => {
@@ -52,8 +53,8 @@ const ItemBig = () => {
           console.log(data);
           steBrandName(data.data);
         });
-
-      fetch(`/api/all-items-in-cart/${userId}`)
+      if (currentUser){
+      fetch(`/api/all-items-in-cart/${currentUser._id}`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -67,21 +68,21 @@ const ItemBig = () => {
               setOutOfStock(true);
             }
           });
-        });
+        })};
     }
   }, [item]);
 
   // POST item to cart, when button is clicked
   const addToCart = (ev) => {
     ev.preventDefault();
-
+    if (currentUser){
     fetch(`/api/add-item-in-cart/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        user: userId,
+        user: currentUser._id,
         item: id,
       }),
     })
@@ -104,7 +105,7 @@ const ItemBig = () => {
       .catch((err) => {
         console.log(err);
       });
-  };
+  }};
 
   return (
     <>
@@ -129,9 +130,11 @@ const ItemBig = () => {
                 )}
                 <ItemName>{item.name}</ItemName>
                 <ItemPrice>{item.price}</ItemPrice>
+                {currentUser ?
                 <AddToCartButton onClick={addToCart} disabled={outOfStock}>
                   Add to Cart
-                </AddToCartButton>
+                </AddToCartButton> :
+                <PleaseSignIn>Please sign in to enable add-to-cart button.</PleaseSignIn>}
                 <DescriptionTitle>DESCRIPTION</DescriptionTitle>
                 <Hr />
                 <Description>
@@ -214,6 +217,17 @@ const AddToCartButton = styled.button`
     filter: contrast(40%);
   }
 `;
+
+const PleaseSignIn = styled.p`
+  width: 100%;
+  height: 40px;
+  background-color: black;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 30px;
+`;
+
 
 const Description = styled.div`
   line-height: 1.4;
