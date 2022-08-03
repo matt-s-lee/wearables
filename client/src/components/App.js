@@ -14,7 +14,7 @@ import Footer from "./Footer";
 import ItemBig from "./ItemBig";
 import BrandPage from "./BrandPage";
 import Signin from "./SignIn";
-import Checkout from "./Checkout";
+import Checkout from "./CheckoutPage/Checkout";
 import { ShopContext } from "./ShopContext";
 import LoadingScreen from "./LoadingScreen";
 import BrandsAllPage from "./BrandsAllPage";

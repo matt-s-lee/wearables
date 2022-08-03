@@ -7,27 +7,34 @@ const OrderConfirmation = () =>{
  // GET userId from ShopContext
   const { state } = useContext(ShopContext);
   const userId = state.currentUser._id;
-
   const [orderedItems, setOrderedITems] = useState(null);
+  const [status,setStatus] = useState("");
 
   useEffect(() =>{
-    const getORderDetails = async () => {
+    const getOrderDetails = async () => {
       const response = await   fetch(`/api/all-orders-by-user/${userId}`)
       const data = await response.json();
       const orderArray = data.data[data.data.length-1];
       setOrderedITems(orderArray);
     };
-    getORderDetails();
+    getOrderDetails();
+  }, []);
+
+  useEffect(() =>{
+    const deleteShoppingPart = async () =>{
+        await fetch(`/api/empty-cart/${userId}`,{method:'Delete'});
+        setStatus('Delete successful');
+    }
+    deleteShoppingPart();
   }, []);
 
     if(orderedItems){
-        console.log(orderedItems)
     return(
         <Wrapper>
         <Messages>
         <ThankyouMessage>Thank you for shopping at WEARLESS!!!</ThankyouMessage>
         <RecievedMessage>We have received your order and will send you another email when your package ships.</RecievedMessage>
-        <OrderDetailHead>Order Confirmation ID : {orderedItems._id}</OrderDetailHead>
+        <OrderDetailHead>Order Confirmation ID : {orderedItems.OrderId}</OrderDetailHead>
         </Messages>
         <ProgressBar>
             <UL>
@@ -101,7 +108,7 @@ text-align:left;
 }
 &:after{
     position : absolute;
-    width : 96%;
+    width : 96.5%;
     height : 5px;
     background-color: #E8E8E8;
     top : 10px;
