@@ -52,7 +52,7 @@ const Header = () => {
               <Collection>Brands</Collection>
             </Nav>
             <List>
-              {state.brands.map(brand => {
+              {state.brands.sort().map(brand => {
                 return (
                   <DropWrapper>
                     <ListItem to={`/brands/${brand}`}>
@@ -72,7 +72,7 @@ const Header = () => {
               <Collection>Categories</Collection>
             </Nav>
             <List>
-              {state.categories.map(category => {
+              {state.categories.sort().map(category => {
                 return (
                   <DropWrapper>
                     <ListItem to={`/categories/${category}`}>
@@ -144,6 +144,8 @@ const Logo = styled(NavLink)`
   font-size: 48px;
   color: black;
   text-align: center;
+  position: relative;
+  left: 4%;
 `
 
 const Collection = styled.div`

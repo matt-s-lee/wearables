@@ -98,6 +98,12 @@ export const AddToCart = styled.button`
   &:hover {
     color: white;
     background: green;
-    /* border: white; */
   }
+`;
+// ------------------------------------------------
+// Alignment Wrapper for Conditinal Load
+
+export const LoadWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;

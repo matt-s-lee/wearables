@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import { ShopContext } from "./ShopContext";
 import { IoAddSharp, IoRemoveOutline } from "react-icons/io5";
@@ -25,7 +25,9 @@ import {
   CostHeader,
   CostData,
   AddToCart,
+  LoadWrapper,
 } from "./ReviewCartPage/reviewCartStyledComponents";
+import LoadingScreen from "./LoadingScreen";
 
 // ------------------------------------------------
 
@@ -41,7 +43,6 @@ const ReviewCartPage = () => {
 
   const { state } = useContext(ShopContext);
   let currentUser = state.currentUser;
-  // const userId = "abc12321";
 
   // GET item ID #s of all items in the user's cart,
   const getCartDetails = async () => {
@@ -144,24 +145,20 @@ const ReviewCartPage = () => {
   };
 
   // ------------------------------------------------
-  return (
-    <div>
-      <SnackbarComponent
-        message="Cart modified"
-        snackbarOpen={snackbarOpen}
-        setSnackbarOpen={setSnackbarOpen}
-      />
-      {cartItems && (
-        <YourCart>
-          Your Shopping Cart <ItemsNum>({cartItems.length})</ItemsNum>
-        </YourCart>
-      )}
-      {!currentUser ? (
-        <div>
-          Please <span onClick={navigate(`/signin`)}>log-in</span> to see cart!
-        </div>
-      ) : (
-        cartItems && (
+  if (currentUser && cartItemsArray.length > 0) {
+    return (
+      <div>
+        <SnackbarComponent
+          message="Cart modified"
+          snackbarOpen={snackbarOpen}
+          setSnackbarOpen={setSnackbarOpen}
+        />
+        {cartItems && (
+          <YourCart>
+            Your Shopping Cart <ItemsNum>({cartItems.length})</ItemsNum>
+          </YourCart>
+        )}
+        {cartItems && (
           <Review>
             {/* Conditional rendering of Item Details table */}
             {cartItems.length === 0 ? (
@@ -242,10 +239,26 @@ const ReviewCartPage = () => {
               </Cost>
             )}
           </Review>
-        )
-      )}
-    </div>
-  );
+        )}
+      </div>
+    );
+  }
+  else if (currentUser && cartItemsArray.length === 0) {
+    return (
+      <LoadWrapper>
+        <LoadingScreen />
+      </LoadWrapper>
+    )
+  }
+  else {
+    return (
+      <LoadWrapper>
+        <span>Please&nbsp;</span>
+        <NavLink to="/signin" >log-in</NavLink> 
+        <span>&nbsp;to see cart!</span>
+      </LoadWrapper>
+    )
+  };
 };
 
 export default ReviewCartPage;

@@ -1,66 +1,69 @@
 import Address from "ipaddr.js";
-import { useState,useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import states from "../data/states";
 import OrderConfirmation from "./OrderConfirmation";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "./ShopContext";
+import LoadingScreen from "./LoadingScreen";
 
 //shopping cart
 //a route
 const Checkout = () => {
   const [country, setCountry] = useState(null);
   const [cartItems, setCartItems] = useState(null);
-  const [cartItemsArray,setCartItemsArray] = useState([]);
-  const [flag,setFlag] = useState(false);
-  const [orderPlaced,setOrderPlaced] = useState(false);
+  const [cartItemsArray, setCartItemsArray] = useState([]);
+  const [flag, setFlag] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
   let navigate = useNavigate();
 
-  let total =0;
+  let total = 0;
   let cartItems1 = [];
 
   // GET userId from ShopContext
   const { state } = useContext(ShopContext);
-  const userId = state.currentUser._id;
+  const userId = state.currentUser;
 
   //Get all the items in the cart of the user
-  useEffect(() =>{
+  useEffect(() => {
     const getCartDetails = async () => {
-      const response = await   fetch(`/api/all-items-in-cart/${userId}`)
+      const response = await fetch(`/api/all-items-in-cart/${userId._id}`)
       const data = await response.json();
       setCartItems(data.data.items);
     };
-    getCartDetails();
+    if (userId){
+      getCartDetails();
+    }
   }, []);
 
-    //Iterate through the items in the cart of the user and fetch the 
-    //item details from the items collection
-    useEffect(() =>{
-      if(cartItems){
-        console.log(cartItems);
-    Promise.all(cartItems.map(item =>
+  //Iterate through the items in the cart of the user and fetch the 
+  //item details from the items collection
+  useEffect(() => {
+    if (cartItems) {
+      console.log(cartItems);
+      Promise.all(cartItems.map(item =>
         fetch(`/api/item/${item.itemId}`).then(resp => resp.json())
-    )).then(data => {
-        data.forEach(function(obj){
+      )).then(data => {
+        data.forEach(function (obj) {
           cartItems1.push(obj.data)
         })
         setCartItemsArray(cartItems1)
-    })
-  }
-  },[cartItems])
-
-  const totalCost = () =>{
-      //Calculate the total price fo the order
-  if(cartItemsArray.length){
-    cartItems.forEach((cartItem) =>{
-      cartItemsArray.forEach((item) =>{
-        if(item._id === cartItem.itemId){
-          total = total+cartItem.quantity*parseFloat((item.price).replace("$",''))
-        }
       })
-    })
-  }
-  return total.toFixed(2);
+    }
+  }, [cartItems])
+
+  const totalCost = () => {
+    //Calculate the total price fo the order
+    if (cartItemsArray.length) {
+      cartItems.forEach((cartItem) => {
+        cartItemsArray.forEach((item) => {
+          if (item._id === cartItem.itemId) {
+            total = total + cartItem.quantity * parseFloat((item.price).replace("$", ''))
+          }
+        })
+      })
+    }
+    return total.toFixed(2);
   }
 
   //Method to set the country based on the country dropdown selection
@@ -72,122 +75,123 @@ const Checkout = () => {
     }
   };
 
-  const placeyourOrder = (e) =>{
+  const placeyourOrder = (e) => {
     e.preventDefault();
-    fetch("/api/add-order",{
-      method:"POST",
-      body:JSON.stringify({
-        items:cartItemsArray,
+    fetch("/api/add-order", {
+      method: "POST",
+      body: JSON.stringify({
+        items: cartItemsArray,
       }),
-      headers:{
-        "Content-Type" : "application/json",
+      headers: {
+        "Content-Type": "application/json",
       }
-    })   .then((res) => res.json())
-    .then((data) => {
-      // show confirmation that it was added to the orders
-      navigate(`/order-confirmation`);
-    });
+    }).then((res) => res.json())
+      .then((data) => {
+        // show confirmation that it was added to the orders
+        navigate(`/order-confirmation`);
+      });
   }
 
-  return (
-    <>
-    <Headings>
-      <H1>Checkout</H1>
-      <H2>Order summary</H2>
-      </Headings>
-      <Wrapper>
-        <Form onSubmit={(e) => placeyourOrder(e)}>
-          <Names>
-            <FirstName>
-              <Input type="text" placeholder="First Name" required />
-            </FirstName>
-            <LastName>
-              <Input type="text" placeholder="Last Name" required />
-            </LastName>
-          </Names>
+  if (cartItemsArray.length > 0) {
+    return (
+      <>
+        <Headings>
+          <H1>Checkout</H1>
+          <H2>Order summary</H2>
+        </Headings>
+        <Wrapper>
+          <Form onSubmit={(e) => placeyourOrder(e)}>
+            <Names>
+              <FirstName>
+                <Input type="text" placeholder="First Name" required />
+              </FirstName>
+              <LastName>
+                <Input type="text" placeholder="Last Name" required />
+              </LastName>
+            </Names>
 
-          <Address1>
-            <Input type="text" id="address" placeholder="Street Address" required/>
-          </Address1>
+            <Address1>
+              <Input type="text" id="address" placeholder="Street Address" required />
+            </Address1>
 
-          <Address2>
-            <Input
-              type="text"
-              id="address2"
-              placeholder="Apartment #, Suite etc.(Optional)"
-            />
-          </Address2>
+            <Address2>
+              <Input
+                type="text"
+                id="address2"
+                placeholder="Apartment #, Suite etc.(Optional)"
+              />
+            </Address2>
 
-          <Country>
-            <Select id="country" required="" onChange={(e) => selectCountry(e)} required>
-              <option value="" disabled selected>
-                Choose a Country
-              </option>
-              <option>Canada</option>
-              <option>United States</option>
-            </Select>
-          </Country>
-          <State>
-            <Select id="state" required>
-              <option value="" disabled selected>
-                Select a Region
-              </option>
-              {country !== null
-                ? states[country].map((state) => {
+            <Country>
+              <Select id="country" onChange={(e) => selectCountry(e)} required>
+                <option value="" disabled selected>
+                  Choose a Country
+                </option>
+                <option>Canada</option>
+                <option>United States</option>
+              </Select>
+            </Country>
+            <State>
+              <Select id="state" required>
+                <option value="" disabled selected>
+                  Select a Region
+                </option>
+                {country !== null
+                  ? states[country].map((state) => {
                     return (
                       <>
                         <option value={state.name}>{state.name}</option>
                       </>
                     );
                   })
-                : null}
-            </Select>
-          </State>
-          <Address2>
-            <Input
-              type="text"
-              id="address2"
-              placeholder="Apartment #, Suite etc.(Optional)"
-            />
-          </Address2>
+                  : null}
+              </Select>
+            </State>
+            <Address2>
+              <Input
+                type="text"
+                id="address2"
+                placeholder="Apartment #, Suite etc.(Optional)"
+              />
+            </Address2>
 
-          <City>
-            <Input type="text" id="city" placeholder="City" required/>
-          </City>
+            <City>
+              <Input type="text" id="city" placeholder="City" required />
+            </City>
 
-          <PostalCode>
-            <Input
-              type="text"
-              id="postalCode"
-              placeholder="Postal Code/Pin Code"
-              required
-            />
-          </PostalCode>
+            <PostalCode>
+              <Input
+                type="text"
+                id="postalCode"
+                placeholder="Postal Code/Pin Code"
+                required
+              />
+            </PostalCode>
 
-          <PhoneNumber>
-            <Input type="text" id="number" placeholder="Phone" required/>
-          </PhoneNumber>
+            <PhoneNumber>
+              <Input type="text" id="number" placeholder="Phone" required />
+            </PhoneNumber>
 
-          <Button type="submit">PLACE YOUR ORDER</Button>
-        </Form>
-        <OrderSummary>
-          <OrderDetails>
-            {cartItemsArray !== null?
-            cartItemsArray.map((item,index) =>{
-             return(
-               <Order>
-               <Img src = {item.imageSrc}/>
-               <Name>{item.name}</Name>
-               {cartItems.map((cartItem) =>(
-                <PriceAndQuantity>{cartItem.itemId === item._id ? <><Quantity>x{cartItem.quantity}</Quantity>
-                <Price>${cartItem.quantity*parseFloat((item.price).replace("$",'')).toFixed(2)}</Price></>
-                :null}</PriceAndQuantity>
-               ))}
-               </Order>
-             )
-            }):null}
-          </OrderDetails>
-          <Subtotal>
+            <Button type="submit">PLACE YOUR ORDER</Button>
+          </Form>
+          <OrderSummary>
+            <OrderDetails>
+              {cartItemsArray !== null ?
+                cartItemsArray.map((item, index) => {
+                  return (
+                    <Order>
+                      <Img src={item.imageSrc} />
+                      <Name>{item.name}</Name>
+                      {cartItems.map((cartItem) => (
+                        <PriceAndQuantity>{cartItem.itemId === item._id ? <><Quantity>x{cartItem.quantity}</Quantity>
+                          <Price>${cartItem.quantity * parseFloat((item.price).replace("$", '')).toFixed(2)}</Price></>
+                          : null}</PriceAndQuantity>
+                      ))}
+                    </Order>
+                  )
+                }) : null}
+            </OrderDetails>
+            <Subtotal>
               <SubtotalHead>SUBTOTAL</SubtotalHead>
               <Sum>${totalCost()}</Sum>
             </Subtotal>
@@ -195,10 +199,18 @@ const Checkout = () => {
               <SubtotalHead>SHIPPING</SubtotalHead>
               <Sum>$0</Sum>
             </Subtotal>
-        </OrderSummary>
+          </OrderSummary>
+        </Wrapper>
+      </>
+    );
+  }
+  else {
+    return (
+      <Wrapper load="true">
+        <LoadingScreen />
       </Wrapper>
-    </>
-  );
+    )
+  }
 };
 
 const Wrapper = styled.div`
@@ -206,6 +218,7 @@ const Wrapper = styled.div`
   margin: 0 24px;
   box-sizing: border-box;
   display: flex;
+
 `;
 const H1 = styled.h1`
   font-size: 24px;
@@ -274,8 +287,8 @@ margin: 50px 0px 20px 0px;
 width:400px;
 `;
 const Img = styled.img`
- margin: 10px 20px 20px 0px;`;
- 
+  margin: 10px 20px 20px 0px;`;
+
 const Price = styled.div`
 margin: 50px 0px 20px 0px;
 align-items:right;
