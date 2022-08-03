@@ -10,17 +10,19 @@ const OrderHistory = () => {
     setOrderNumber(e.target.value)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    window.alert("For your convenience, we added an alert instead of doing nothing, as we can make something happen but will not.")
     fetch(`/api/order/${orderNumber}`)
       .then(res => res.json())
       .then(data => {
-        console.log(data)
+
       })
   }
 
   return (
     <Wrapper>
-      <Form>
+      <Form onSubmit={handleSubmit}> 
         <Input placeholder="Order Number" value={orderNumber} onChange={handleInput}/>
         <Button type="submit">Search</Button>
       </Form>
@@ -29,7 +31,7 @@ const OrderHistory = () => {
 }
 
 const Wrapper = styled.div`
-  padding: 24px;
+  padding: var(--padding-page);
   display: flex;
   flex-direction: column;
   align-items: center;

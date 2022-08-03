@@ -21,12 +21,12 @@ const Contact = () => {
 }
 
 const Wrapper = styled.div`
-  height: 50vh;
+  padding: var(--padding-page);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 `
+
 
 const Text = styled.div`
   width: 309px;
