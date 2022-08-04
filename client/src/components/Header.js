@@ -5,7 +5,7 @@ import { ShopContext } from "./ShopContext";
 import { underline, underlineTransition } from "./underline";
 import { BiHistory } from "react-icons/bi";
 import { BsCart4, BsSearch } from "react-icons/bs";
-import { MdOutlineContactSupport } from "react-icons/md"
+import { MdOutlineContactSupport } from "react-icons/md";
 
 //nav bar
 const Header = () => {
@@ -18,7 +18,7 @@ const Header = () => {
           <Contact />
           <ToolTip>Contact Us</ToolTip>
         </Nav2>
-        <Logo to="/" >WEARLESS</Logo>
+        <Logo to="/">WEARLESS</Logo>
         <WrapperTopRight>
           <Nav2 to="/search">
             <Search />
@@ -32,69 +32,64 @@ const Header = () => {
             <Cart />
             <ToolTip>Cart</ToolTip>
           </Nav2>
-          {!state.currentUser ?
+          {!state.currentUser ? (
             <Nav to="/signin">
               <Collection>Sign In</Collection>
             </Nav>
-            : <Nav to={`/user/${state.currentUser._id}`}>
+          ) : (
+            <Nav to={`/user/${state.currentUser._id}`}>
               <Collection>{`Hello ${state.currentUser.firstName}`}</Collection>
             </Nav>
-          }
+          )}
         </WrapperTopRight>
       </WrapperTop>
       <NavBar>
         <Nav to="/products">
           <Collection>Products</Collection>
         </Nav>
-        {(state.brands !== null) &&
+        {state.brands !== null && (
           <DropWrapper>
             <Nav to="/brands">
               <Collection>Brands</Collection>
             </Nav>
             <List>
-              {state.brands.sort().map(brand => {
+              {state.brands.sort().map((brand) => {
                 return (
                   <DropWrapper key={brand}>
                     <ListItem to={`/brands/${brand}`}>
-                      <ListAfter>
-                        {brand}
-                      </ListAfter>
+                      <ListAfter>{brand}</ListAfter>
                     </ListItem>
                   </DropWrapper>
-                )
+                );
               })}
             </List>
           </DropWrapper>
-        }
-        {(state.categories !== null) &&
+        )}
+        {state.categories !== null && (
           <DropWrapper>
             <Nav to="/categories">
               <Collection>Categories</Collection>
             </Nav>
             <List>
-              {state.categories.sort().map(category => {
+              {state.categories.sort().map((category) => {
                 return (
                   <DropWrapper key={category}>
                     <ListItem to={`/categories/${category}`}>
-                      <ListAfter>
-                        {category}
-                      </ListAfter>
+                      <ListAfter>{category}</ListAfter>
                     </ListItem>
                   </DropWrapper>
-                )
+                );
               })}
             </List>
           </DropWrapper>
-        }
+        )}
         <Nav to="/new-arrivals">
           <Collection>New Arrivals</Collection>
         </Nav>
       </NavBar>
     </Wrapper>
-  )
-}
-
-
+  );
+};
 
 const List = styled.div`
   max-height: 555px;
@@ -110,7 +105,7 @@ const List = styled.div`
   &:hover {
     visibility: visible;
   }
-`
+`;
 
 const ListAfter = styled.div`
   position: relative;
@@ -118,7 +113,7 @@ const ListAfter = styled.div`
   &:after {
     ${underline}
   }
-`
+`;
 
 const ListItem = styled(NavLink)`
   font-size: 18px;
@@ -127,15 +122,15 @@ const ListItem = styled(NavLink)`
   text-decoration: none;
   color: black;
   overflow: hidden;
-  &:hover ${ListAfter}:after{
+  &:hover ${ListAfter}:after {
     ${underlineTransition}
-  } 
-`
+  }
+`;
 
 const Wrapper = styled.header`
   height: var(--header-height);
   font-family: var(--font);
-`
+`;
 
 const Logo = styled(NavLink)`
   text-decoration: none;
@@ -146,16 +141,18 @@ const Logo = styled(NavLink)`
   text-align: center;
   position: relative;
   left: 90px;
-`
+`;
 
 const Collection = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  &:after{
+  text-transform: uppercase;
+  font-size: 20px;
+  &:after {
     ${underline}
   }
-`
+`;
 
 const Nav = styled(NavLink)`
   text-decoration: none;
@@ -165,11 +162,11 @@ const Nav = styled(NavLink)`
   color: white;
   display: inline-flex;
   justify-content: center;
-  align-items: center; 
-  &:hover ${Collection}:after{
+  align-items: center;
+  &:hover ${Collection}:after {
     ${underlineTransition}
-  }  
-`
+  }
+`;
 
 const DropWrapper = styled.div`
   position: relative;
@@ -177,15 +174,14 @@ const DropWrapper = styled.div`
   & ${Nav}:hover + ${List} {
     visibility: visible;
   }
-`
+`;
 
 const WrapperTop = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 60px;
-  
-`
+`;
 
 const WrapperTopRight = styled.div`
   display: flex;
@@ -193,10 +189,10 @@ const WrapperTopRight = styled.div`
   & ${Nav} {
     color: black;
   }
-  & ${Nav} ${Collection}:after{
+  & ${Nav} ${Collection}:after {
     background-color: black;
   }
-`
+`;
 
 const NavBar = styled.div`
   display: flex;
@@ -210,35 +206,35 @@ const NavBar = styled.div`
   & ${Collection}:after {
     background-color: white;
   }
-`
+`;
 
 const IconsCSS = css`
   padding: 0 4px;
   width: 30px;
   height: 30px;
-`
+`;
 
 const Cart = styled(BsCart4)`
   ${IconsCSS}
-`
+`;
 
 const History = styled(BiHistory)`
   ${IconsCSS}
-`
+`;
 
 const Contact = styled(MdOutlineContactSupport)`
   ${IconsCSS}
-`
+`;
 
 const Search = styled(BsSearch)`
   ${IconsCSS}
-`
+`;
 
 const ToolTip = styled.span`
   font-size: 18px;
   opacity: 0;
   width: 120px;
-  background-color: #B1B3B3FF;
+  background-color: #b1b3b3ff;
   color: white;
   text-align: center;
   border-radius: 6px;
@@ -248,19 +244,19 @@ const ToolTip = styled.span`
   top: 80%;
   left: 25%;
   margin-left: -10px;
-  transform: translate3d(0,-10px,0);
-  transition: all .15s ease-in-out;
-&:after {
-  content: "";
-  position: absolute;
-  bottom: 100%;
-  left: 25%;
-  margin-left: -10px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent #B1B3B3FF transparent;
-}
-`
+  transform: translate3d(0, -10px, 0);
+  transition: all 0.15s ease-in-out;
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 25%;
+    margin-left: -10px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #b1b3b3ff transparent;
+  }
+`;
 
 const Nav2 = styled(NavLink)`
   text-decoration: none;
@@ -271,8 +267,8 @@ const Nav2 = styled(NavLink)`
   position: relative;
   &:hover ${ToolTip} {
     opacity: 1;
-    transform: translate3d(0,0,0);
+    transform: translate3d(0, 0, 0);
   }
-`
+`;
 
 export default Header;
