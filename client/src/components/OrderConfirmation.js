@@ -21,14 +21,15 @@ const OrderConfirmation = () =>{
   }, []);
 
   useEffect(() =>{
-    const deleteShoppingPart = async () =>{
+    const deleteShoppingCart = async () =>{
         await fetch(`/api/empty-cart/${userId}`,{method:'Delete'});
         setStatus('Delete successful');
     }
-    deleteShoppingPart();
+    deleteShoppingCart();
   }, []);
 
     if(orderedItems){
+        console.log(orderedItems)
     return(
         <Wrapper>
         <Messages>

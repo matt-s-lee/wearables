@@ -5,7 +5,7 @@ require("dotenv").config({ path: "./.env" });
 const { MONGO_URI } = process.env;
 // use this package to generate unique ids: https://www.npmjs.com/package/uuid
 const { v4: uuidv4 } = require("uuid");
-const userId = "abc12321"; // hard-coded user, until we can create new users
+ // GET userId from ShopContext
 
 const options = {
   useNewUrlParser: true,
@@ -43,7 +43,7 @@ const addOrder = async (req, res) => {
   //insert a name in collection users
   const result = await db
     .collection("orders")
-    .insertOne({ userId:"abc12321", OrderId: uuidv4(), items });
+    .insertOne({ userId:userId, OrderId: uuidv4(), items });
   if (result.acknowledged) {
     res
       .status(201)
