@@ -254,10 +254,10 @@ const Checkout = () => {
                                 <Quantity>x{cartItem.quantity}</Quantity>
                                 <Price>
                                   $
-                                  {cartItem.quantity *
+                                  {(cartItem.quantity *
                                     parseFloat(
                                       item.price.replace("$", "")
-                                    ).toFixed(2)}
+                                    )).toFixed(2)}
                                 </Price>
                               </>
                             ) : null}
