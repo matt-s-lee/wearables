@@ -13,7 +13,7 @@ const HomePage = () => {
         <Video src={video} autoPlay loop muted></Video>
         <ContentDiv>
           <ContentTitle>Wearless</ContentTitle>
-          <Content>Wearless is not place where we do not recommend our products. It a place with the most outrageous prices and pictures that will make dream of having, but you cannot. Wearless, where we make the customer very unsatisfied.</Content>
+          <Content>Wearless is a place where we do not recommend our products. It is a store with the most outrageous prices and pictures that will make you dream of having our products - but you cannot ever have them. Wearless: where the best customer is a customer deeply unsatisfied.</Content>
           <ShopNowButton onClick={()=>{navigate("/products")}}>Shop Now</ShopNowButton>
         </ContentDiv>
       </VideoDiv>
@@ -50,7 +50,7 @@ z-index: 0;
 
 const ContentDiv = styled.div`
 z-index: 1;
-width: 20%;
+width: 18%;
 display: flex;
 flex-direction: column;
 justify-content: flex-end;
@@ -71,8 +71,8 @@ margin-bottom: 5%;
 `;
 
 const ShopNowButton = styled.button`
-width: 90%;
-height: 10%;
+width: 98%;
+height: 8%;
 background-color: black;
 color: white;
 font: inherit;
