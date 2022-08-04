@@ -126,6 +126,7 @@ const Checkout = () => {
       method: "POST",
       body: JSON.stringify({
         items: cartItemsArray,
+        userId:userId._id,
       }),
       headers: {
         "Content-Type": "application/json",

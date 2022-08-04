@@ -44,7 +44,8 @@ export const Input = styled.input`
   margin: 10px 20px 10px 20px;
   font-family: var(--font);
 `;
-export const Address2 = styled.div``;
+export const Address2 = styled.div`
+`;
 export const Address1 = styled.div``;
 export const Country = styled.div``;
 export const Select = styled.select`
