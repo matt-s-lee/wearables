@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Banner from "./Banner";
 import ItemSmall from "./ItemSmall";
@@ -11,8 +10,6 @@ import AllItemBanner from "../data/AllItemsBanner.jpeg";
 // a route (URL: /products)
 
 const ItemsPage = () => {
-  let navigate = useNavigate();
-
   const [firstResults, setFirstResults] = useState(null); // array of products to display upon page mount
   const [allResults, setAllResults] = useState(); // array of all products
   const [resultsLoaded, setResultsLoaded] = useState(0); // counter to keep track of the number of results displayed
@@ -22,7 +19,6 @@ const ItemsPage = () => {
     fetch("/api/all-items")
       .then((res) => res.json())
       .then((json) => {
-        // console.log(json.data);
         setFirstResults(json.data.slice(0, 15)); // shows first 15 results
         setAllResults(json.data);
         setResultsLoaded(15); // sets counter to 15
@@ -40,7 +36,7 @@ const ItemsPage = () => {
   if (allResults !== undefined) {
     return (
       <Wrapper>
-        <Banner imageSrc={AllItemBanner}/>
+        <Banner imageSrc={AllItemBanner} />
         <Title>All Products</Title>
         <ProductsGrid>
           {firstResults &&
@@ -61,19 +57,20 @@ const ItemsPage = () => {
           <NumberText>
             {`Displaying ${resultsLoaded} of ${allResults.length} products`}
           </NumberText>
-          {resultsLoaded < allResults.length && <Button onClick={handleClick}>
-            <Span>Load More</Span>
-          </Button>}
+          {resultsLoaded < allResults.length && (
+            <Button onClick={handleClick}>
+              <Span>Load More</Span>
+            </Button>
+          )}
         </GridExtra>
       </Wrapper>
     );
-  }
-  else {
+  } else {
     return (
       <Wrapper>
         <LoadingScreen />
       </Wrapper>
-    )
+    );
   }
 };
 
@@ -81,7 +78,7 @@ const Title = styled.div`
   margin: 10px auto;
   font-size: 32px;
   text-decoration: underline;
-`
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -101,7 +98,7 @@ const GridExtra = styled.div`
   display: block;
   position: relative;
   height: 80px;
-`
+`;
 
 const NumberText = styled.div`
   position: absolute;
@@ -109,7 +106,7 @@ const NumberText = styled.div`
   padding: 10px 48px;
   font-size: 16px;
   font-style: italic;
-`
+`;
 
 const Span = styled.span`
   font-size: 16px;
@@ -119,7 +116,7 @@ const Span = styled.span`
     ${underline}
     background-color: white;
   }
-`
+`;
 
 const Button = styled.button`
   position: relative;
@@ -134,6 +131,6 @@ const Button = styled.button`
   &:hover ${Span}:after {
     ${underlineTransition}
   }
-`
+`;
 
 export default ItemsPage;
