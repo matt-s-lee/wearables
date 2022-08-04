@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../ShopContext";
 import {
   List,
@@ -18,10 +19,19 @@ import {
   Search,
   ToolTip,
   Nav2,
+  Signout,
+  Button,
 } from "./HeaderStyledComponents";
 
 const Header = () => {
-  const { state } = useContext(ShopContext);
+  const { state, actions: { handleUserLogin } } = useContext(ShopContext);
+  const navigate = useNavigate()
+
+  const handleSignOutButton = (e) => {
+    e.preventDefault();
+    handleUserLogin(null)
+    navigate("/")
+  }
 
   return (
     <Wrapper>
@@ -48,13 +58,14 @@ const Header = () => {
             <ToolTip>Cart</ToolTip>
           </Nav2>
           {!state.currentUser ? (
-            <Nav to="/signin">
+            <Nav2 to="/signin">
               <Collection>Sign In</Collection>
-            </Nav>
+            </Nav2>
           ) : (
-            <Nav to={`/user/${state.currentUser._id}`}>
+            <Nav2 to={`/user/${state.currentUser._id}`}>
               <Collection>{`Hello ${state.currentUser.firstName}`}</Collection>
-            </Nav>
+              <Signout><Button onClick={handleSignOutButton}>Sign out</Button></Signout>
+            </Nav2>
           )}
         </WrapperTopRight>
       </WrapperTop>

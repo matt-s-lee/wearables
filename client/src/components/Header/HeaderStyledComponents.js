@@ -186,3 +186,26 @@ export const Nav2 = styled(NavLink)`
     transform: translate3d(0, 0, 0);
   }
 `;
+
+export const Signout = styled(ToolTip)`
+  left: 10%;
+  &:after {
+    left: 55%;
+  }
+`;
+
+export const Button = styled.button`
+  outline: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: white;
+  font-family: var(--font);
+  font-size: 18px;
+  &:after {
+    ${underline}
+  }
+  &:hover:after {
+    ${underlineTransition}
+  }
+`;
