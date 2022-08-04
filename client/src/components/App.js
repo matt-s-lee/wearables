@@ -19,7 +19,7 @@ import { ShopContext } from "./ShopContext";
 import LoadingScreen from "./LoadingScreen";
 import BrandsAllPage from "./BrandsAllPage";
 import CategoriesAllPage from "./CategoriesAllPage";
-import ReviewCartPage from "./ReviewCartPage";
+import ReviewCartPage from "./ReviewCartPage/ReviewCartPage";
 import OrderConfirmation from "./OrderConfirmation";
 import SearchPage from "./SearchPage";
 

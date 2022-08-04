@@ -1,9 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-import { ShopContext } from "./ShopContext";
+import { ShopContext } from "../ShopContext";
 import { IoAddSharp, IoRemoveOutline } from "react-icons/io5";
-import SnackbarComponent from "./SnackbarComponent";
+import SnackbarComponent from "../SnackbarComponent";
 
 import {
   YourCart,
@@ -26,8 +26,8 @@ import {
   CostData,
   AddToCart,
   LoadWrapper,
-} from "./ReviewCartPage/reviewCartStyledComponents";
-import LoadingScreen from "./LoadingScreen";
+} from "./reviewCartStyledComponents";
+import LoadingScreen from "../LoadingScreen";
 
 // ------------------------------------------------
 
@@ -39,6 +39,8 @@ const ReviewCartPage = () => {
   const [cartItems, setCartItems] = useState(null); // Array of item ID #s
   const [cartItemsArray, setCartItemsArray] = useState([]); // Array of item data
   let cartItems1 = []; // empty array of items to be pushed into
+  //useState for outOfStock
+  let [outOfStock,setOutOfStock] = useState(false);
   let total = 0;
 
   const { state } = useContext(ShopContext);
@@ -77,6 +79,7 @@ const ReviewCartPage = () => {
 
   // DELETE item from the cart
   const handleRemove = (_id) => {
+    setOutOfStock(false);
     if (currentUser) {
       fetch("/api/delete-item-in-cart", {
         method: "DELETE",
@@ -91,7 +94,6 @@ const ReviewCartPage = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           if (data.status === 200) {
             setSnackbarOpen(true);
             getCartDetails();
@@ -102,7 +104,17 @@ const ReviewCartPage = () => {
 
   // ADD item to cart
   const handleAdd = (_id) => {
+    setOutOfStock(false);
     if (currentUser) {
+      cartItems.forEach((cartItem) => {
+        cartItemsArray.forEach((item) => {
+          if (item.numInStock <= cartItem.quantity) {
+            setOutOfStock(true);
+          }
+        });
+      });
+    }
+    if(outOfStock === false){
       fetch(`/api/add-item-in-cart/`, {
         method: "POST",
         headers: {
@@ -116,16 +128,14 @@ const ReviewCartPage = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           if (data.status === 201) {
             setSnackbarOpen(true);
             getCartDetails();
           }
         })
         .catch((err) => {
-          console.log(err);
         });
-    }
+  }
   };
 
   //Calculate the total price of the order
@@ -145,7 +155,7 @@ const ReviewCartPage = () => {
   };
 
   // ------------------------------------------------
-  if (currentUser && cartItemsArray.length > 0) {
+  if (currentUser && cartItems) {
     return (
       <div>
         <SnackbarComponent
@@ -193,7 +203,7 @@ const ReviewCartPage = () => {
                           <ItemData>{cartItems[index].quantity}</ItemData>
                         )}
                         <ItemData>
-                          <ChangeQuantity onClick={() => handleAdd(item._id)}>
+                          <ChangeQuantity onClick={() => handleAdd(item._id)} disabled={outOfStock}>
                             <IoAddSharp />
                           </ChangeQuantity>
                         </ItemData>
@@ -243,7 +253,7 @@ const ReviewCartPage = () => {
       </div>
     );
   }
-  else if (currentUser && cartItemsArray.length === 0) {
+  else if (currentUser && cartItems) {
     return (
       <LoadWrapper>
         <LoadingScreen />
