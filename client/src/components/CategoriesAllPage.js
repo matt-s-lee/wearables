@@ -44,18 +44,19 @@ const Wrapper = styled.div`
 
 const ItemList = styled.div`
 width: 50vw;
-font-size: 24px;
+display: grid;
+grid-template-columns: auto auto auto;
+padding: 24px;
 `
 
 const Item = styled(NavLink)`
-  padding: 10px;
-
+  padding: 24px;
   text-decoration: none;
   color: black; 
 `
 
 const ItemAfter = styled.div`
-  font-size: 18px;
+  font-size: 24px;
   position: relative;
   width: fit-content;
   &:after{

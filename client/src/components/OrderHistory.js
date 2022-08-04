@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { ShopContext } from "./ShopContext";
 import { NavLink } from "react-router-dom";
 import LoadingScreen from "./LoadingScreen";
-import ItemSmall from "./ItemSmall";
 
 //for individual order 
 //a route
@@ -20,6 +19,7 @@ const OrderHistory = () => {
           setOrders(data.data)
         })
     }
+    // eslint-disable-next-line
   }, [])
 
   //conditional rendering based on currentUser and fetch orders
@@ -28,7 +28,7 @@ const OrderHistory = () => {
       <Wrapper>
         {orders.map(order => {
           return (
-            <Order key={order.orderId}> 
+            <Order key={order.orderId}>
               <OrderId>{`Order Number: ${order.OrderId}`}</OrderId>
               <ItemList>
                 {order.items.map((item, index) => {
@@ -37,7 +37,7 @@ const OrderHistory = () => {
                   )
                 })}
               </ItemList>
-            </Order>  
+            </Order>
           )
         })}
       </Wrapper>
@@ -84,10 +84,6 @@ const OrderId = styled.div`
 
 const ItemList = styled.div`
   padding: 10px;
-`
-
-const Item = styled.div`
-
 `
 
 export default OrderHistory;
