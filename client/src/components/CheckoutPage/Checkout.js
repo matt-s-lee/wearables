@@ -121,7 +121,6 @@ const Checkout = () => {
     let phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
     if(phone.match(phoneno))
        {
-    console.log("I am here")
     fetch("/api/add-order", {
       method: "POST",
       body: JSON.stringify({
