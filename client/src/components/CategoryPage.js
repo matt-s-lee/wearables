@@ -32,6 +32,7 @@ const CategoryPage = () => {
               price={item.price}
               companyId={item.companyId}
               id={item._id}
+              key={item._id}
             />
           )
         })}

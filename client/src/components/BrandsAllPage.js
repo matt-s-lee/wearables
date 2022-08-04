@@ -32,13 +32,13 @@ const BrandsAllPage = () => {
           {/* sorting letters alphabetically and map each letter */}
           {Object.keys(sortByLetter).sort().map(letter => {
             return (
-              <LetterWrapper>
+              <LetterWrapper key={letter}>
                 <Letter>{letter}</Letter>
                 <ItemList>
                   {/* mapping array assigned to letter */}
                   {sortByLetter[letter].data.map(brand => {
                     return (
-                      <ItemWrapper>
+                      <ItemWrapper key={brand}>
                         <Item to={`/brands/${brand}`}>
                           <ItemAfter>
                             {brand}
