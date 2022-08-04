@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import GlobalStyles from "./GlobalStyles";
-import Header from "./Header";
+import Header from "./Header/Header";
 import styled from "styled-components";
 import HomePage from "./HomePage";
 import CategoryPage from "./CategoryPage";
@@ -35,32 +35,34 @@ const App = () => {
       fetch("/api/all-categories").then((res) => res.json()),
       fetch("/api/all-brands").then((res) => res.json()),
     ]).then((data) => {
-      handleCategoryAndBrandLoad(data)
-    })
+      handleCategoryAndBrandLoad(data);
+    });
     // eslint-disable-next-line
-  }, [])
+  }, []);
 
-
-  //get user id from local storage and fetch user data 
+  //get user id from local storage and fetch user data
   useEffect(() => {
-    const savedUserId = JSON.parse(window.localStorage.getItem("userId"))
-    if (savedUserId){
+    const savedUserId = JSON.parse(window.localStorage.getItem("userId"));
+    if (savedUserId) {
       fetch(`/api/user?userId=${savedUserId}`)
-      .then(res => res.json())
-      .then(data => {
-        handleUserLogin(data.data)
-      })
+        .then((res) => res.json())
+        .then((data) => {
+          handleUserLogin(data.data);
+        });
     }
     // eslint-disable-next-line
-  }, [])
+  }, []);
 
   //save user id in local storage when user is signed in
   useEffect(() => {
-    if(state.currentUser){
-      window.localStorage.setItem("userId", JSON.stringify(state.currentUser._id));
+    if (state.currentUser) {
+      window.localStorage.setItem(
+        "userId",
+        JSON.stringify(state.currentUser._id)
+      );
     }
     // eslint-disable-next-line
-  }, [state.currentUser])
+  }, [state.currentUser]);
 
   //conditional render based on load from fetch
   if (state.load) {
@@ -84,7 +86,11 @@ const App = () => {
             <Route exact path="/signin" element={<Signin />} />
             <Route exact path="/checkout" element={<Checkout />} />
             <Route exact path="/review-cart" element={<ReviewCartPage />} />
-            <Route exact path="/order-confirmation" element={<OrderConfirmation />} />
+            <Route
+              exact
+              path="/order-confirmation"
+              element={<OrderConfirmation />}
+            />
             <Route exact path="/reviewcard" element={<ReviewCartPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="">404: Oops!</Route>
@@ -93,15 +99,13 @@ const App = () => {
         <Footer />
       </BrowserRouter>
     );
-  }
-  else {
+  } else {
     return (
       <Wrapper>
         <LoadingScreen />
       </Wrapper>
-    )
+    );
   }
-
 };
 
 const Main = styled.div`
@@ -114,6 +118,6 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 
 export default App;
