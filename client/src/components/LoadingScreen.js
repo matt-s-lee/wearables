@@ -19,7 +19,7 @@ const Circle = styled.div`
   border-radius: 50%;
   width: 150px;
   height: 150px;
-  animation: ${circleSpin} 1s linear infinite;
+  animation: ${circleSpin} 1s ease-in-out infinite;
   margin: 0 auto;
 `
 
