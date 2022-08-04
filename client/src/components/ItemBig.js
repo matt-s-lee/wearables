@@ -3,36 +3,25 @@ import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ShopContext } from "./ShopContext";
 import YouMayAlsoLike from "./YouMayAlsoLike";
-
-import Snackbar from "@mui/material/Snackbar";
 import SnackbarComponent from "./SnackbarComponent";
 import LoadingScreen from "./LoadingScreen";
 
 // PAGE COMPONENT for each individual item
 // a route
 const ItemBig = () => {
-  const [item, setItem] = useState();
-
-  //useState for brandName
-  const [brandName, steBrandName] = useState();
-
-  //useState for outOfStock
-  const [outOfStock, setOutOfStock] = useState(false);
-
+  const [item, setItem] = useState();//for idividual item
+  const [brandName, steBrandName] = useState();//for brandName
+  const [outOfStock, setOutOfStock] = useState(false);//for outOfStock
   const [snackbarOpen, setSnackbarOpen] = useState(false); // for Snackbar
-
   const [buttonMessage, setButtonMessage] = useState("")//for button message
+  const [loadingState, setLoadingState] = useState("loading")//for loadingstate
 
-  const [loadingState, setLoadingState] = useState("loading")
   // GET item ID # from URL
   const { id } = useParams();
 
   // GET userId from ShopContext
-  // const userId = localStorage.getItem("userId");
   const { state } = useContext(ShopContext);
-
   let currentUser = state.currentUser;
-  // const userId = "abc12321";
 
   // FETCH details about the individual item
   useEffect(() => {
@@ -62,13 +51,15 @@ const ItemBig = () => {
           setLoadingState("idle");
         });
       if (currentUser){
+        //GET item instock number, compare with the number we've put in shopping-cart
+        //If item in stock, add-it-to-cart 
+        //if not, add-to-cart button disabled, and replaced by NOT AVAILABLE sign
       fetch(`/api/all-items-in-cart/${currentUser._id}`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
           data.data.items.forEach((element) => {
             console.log(element.quantity > item.numInStock);
-            // console.log(item)
             if (
               element.itemId === item._id &&
               element.quantity >= item.numInStock
@@ -97,7 +88,6 @@ const ItemBig = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data.data.items);
         data.data.items.forEach((element) => {
           console.log(element.quantity > item.numInStock);
           if (
@@ -239,6 +229,9 @@ const PleaseSignIn = styled.p`
   font-weight: 700;
   font-size: 14px;
   margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 

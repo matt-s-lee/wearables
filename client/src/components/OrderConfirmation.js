@@ -31,30 +31,38 @@ const OrderConfirmation = () =>{
     if(orderedItems){
         console.log(orderedItems)
     return(
-        <Wrapper>
-        <Messages>
-        <ThankyouMessage>Thank you for shopping at WEARLESS!!!</ThankyouMessage>
-        <RecievedMessage>We have received your order and will send you another email when your package ships.</RecievedMessage>
-        <OrderDetailHead>Order Confirmation ID : {orderedItems.OrderId}</OrderDetailHead>
-        </Messages>
-        <ProgressBar>
-            <UL>
-                <Li>Order<br/> Confirmed</Li>
-                <Li>Order<br/> Shipped</Li>
-                <Li>Order<br/> Delivered</Li>
-            </UL>
-        </ProgressBar>
-        </Wrapper>
+        <WrapAll>
+            <Wrapper>
+                <Messages>
+                <ThankyouMessage>Thank you for shopping at WEARLESS!!!</ThankyouMessage>
+                <RecievedMessage>We have received your order and will send you another email when your package ships.</RecievedMessage>
+                <OrderDetailHead>Order Confirmation ID : {orderedItems.OrderId}</OrderDetailHead>
+                </Messages>
+                <ProgressBar>
+                    <UL>
+                        <Li>Order<br/> Confirmed</Li>
+                        <Li>Order<br/> Shipped</Li>
+                        <Li>Order<br/> Delivered</Li>
+                    </UL>
+                </ProgressBar>
+            </Wrapper>
+        </WrapAll>
     )
     }
     else{
         return (
             <Wrapper>
-              <LoadingScreen />
+                <LoadingScreen />
             </Wrapper>
-          )
+        )
     }
 }
+const WrapAll = styled.div`
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 0 var(--padding-page);
+`
 
 const Wrapper = styled.div`
  font-family: var(--font);
