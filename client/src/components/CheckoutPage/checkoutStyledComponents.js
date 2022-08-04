@@ -25,7 +25,7 @@ export const Form = styled.form`
   width: 50%;
   font-family: var(--font);
   margin: 0 24px;
-  height:630px;
+  height:650px;
 `;
 
 export const Names = styled.div`

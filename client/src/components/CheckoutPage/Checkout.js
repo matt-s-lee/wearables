@@ -231,7 +231,7 @@ const Checkout = () => {
               <Input
                 type="tel"
                 id="phone"
-                placeholder="Format: 123-456-7890"
+                placeholder="Format: 123-456-7890 or 1234567890"
                 onChange={(e) => phonenum(e)}
               >
               </Input>
