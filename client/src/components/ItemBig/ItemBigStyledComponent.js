@@ -1,11 +1,5 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-// const Wrapper = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   width: 100vw;
-//   padding: 100px;
-// `;
 
 export const Wrapper = styled.div`
   display: flex;
@@ -13,7 +7,7 @@ export const Wrapper = styled.div`
   width: 100vw;
   padding: 100px;
 `;
-
+//left part of this page
 export const ImgDiv = styled.div`
   width: 50vw;
   display: flex;
@@ -25,6 +19,7 @@ export const Img = styled.img`
   object-fit: contain;
 `;
 
+//Left part of this page
 export const InfoDiv = styled.div`
   width: 50vw;
   padding: 0 100px 0 100px;
@@ -55,6 +50,7 @@ export const ItemPrice = styled.div`
   font-size: 20px;
 `;
 
+//Add-To-Cart Button
 export const AddToCartButton = styled.button`
   width: 100%;
   height: 40px;
@@ -83,7 +79,7 @@ export const PleaseSignIn = styled.p`
   align-items: center;
 `;
 
-
+//description
 export const Description = styled.div`
   line-height: 1.4;
   margin-bottom: s 30px;
