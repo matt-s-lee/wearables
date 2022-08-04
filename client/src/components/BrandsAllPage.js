@@ -3,7 +3,8 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { ShopContext } from "./ShopContext";
 import { underline, underlineTransition } from "./underline";
-
+import Banner from "./Banner";
+import allBrandPageBanner from "../data/banner6.jpeg";
 //all brands page
 //a route
 
@@ -24,32 +25,41 @@ const BrandsAllPage = () => {
   }, {})
 
   return (
-    <Wrapper>
-      {/* sorting letters alphabetically and map each letter */}
-      {Object.keys(sortByLetter).sort().map(letter => {
-        return (
-          <LetterWrapper>
-            <Letter>{letter}</Letter>
-            <ItemList>
-              {/* mapping array assigned to letter */}
-              {sortByLetter[letter].data.map(brand => {
-                return (
-                  <ItemWrapper>
-                    <Item to={`/brands/${brand}`}>
-                      <ItemAfter>
-                        {brand}
-                      </ItemAfter>
-                    </Item>
-                  </ItemWrapper>
-                )
-              })}
-            </ItemList>
-          </LetterWrapper>
-        )
-      })}
-    </Wrapper>
+    <>
+    <WrapAll>
+      <Banner imageSrc={allBrandPageBanner} />
+      <Wrapper>
+        {/* sorting letters alphabetically and map each letter */}
+        {Object.keys(sortByLetter).sort().map(letter => {
+          return (
+            <LetterWrapper>
+              <Letter>{letter}</Letter>
+              <ItemList>
+                {/* mapping array assigned to letter */}
+                {sortByLetter[letter].data.map(brand => {
+                  return (
+                    <ItemWrapper>
+                      <Item to={`/brands/${brand}`}>
+                        <ItemAfter>
+                          {brand}
+                        </ItemAfter>
+                      </Item>
+                    </ItemWrapper>
+                  )
+                })}
+              </ItemList>
+            </LetterWrapper>
+          )
+        })}
+      </Wrapper>
+    </WrapAll>
+    </>
   )
 }
+
+const WrapAll = styled.div`
+  padding: 0 var(--padding-page);
+`;
 
 const Letter = styled.div`
   border-bottom: 1px solid black;
@@ -67,6 +77,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   flex-wrap: wrap;
   padding: 0 48px ;
+  margin-top: 30px;
 `
 
 const ItemWrapper = styled.div`
