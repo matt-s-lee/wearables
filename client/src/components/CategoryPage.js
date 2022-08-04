@@ -9,17 +9,19 @@ import LoadingScreen from "./LoadingScreen";
 const CategoryPage = () => {
   const category = useParams().category;
   const [items, setItems] = useState(null)
+  const [loadingState, setLoadingState] = useState("loading");
 
   useEffect(() => {
+    setLoadingState("loading");
     fetch(`/api/items-by-category/${category}`)
       .then(res => res.json())
       .then(data => {
-        // console.log(data)
         setItems(data.data)
+        setLoadingState("idle");
       })
   }, [category])
 
-  if (items !== null) {
+  if (items && loadingState === "idle") {
     return (
       <Wrapper>
         {items.map(item => {
