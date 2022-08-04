@@ -11,7 +11,7 @@ import ItemsPage from "./ItemsPage";
 import UserProfile from "./UserProfile";
 import OrderHistory from "./OrderHistory";
 import Footer from "./Footer";
-import ItemBig from "./ItemBig";
+import ItemBig from "./ItemBig/ItemBig";
 import BrandPage from "./BrandPage";
 import Signin from "./SignIn";
 import Checkout from "./CheckoutPage/Checkout";
