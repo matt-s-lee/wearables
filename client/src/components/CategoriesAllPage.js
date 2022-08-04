@@ -18,7 +18,7 @@ const CategoriesAllPage = () => {
 
   return (
     <Wrapper>
-      <Banner imageSrc={banner1} text="All Categories"/>
+      <Banner imageSrc={banner1} text="All Categories" />
       <ItemList>
         {/* mapping array assigned to letter */}
         {sortByLetter.map(category => {
@@ -51,7 +51,7 @@ const Item = styled(NavLink)`
   padding: 10px;
 
   text-decoration: none;
-  color: black  
+  color: black; 
 `
 
 const ItemAfter = styled.div`
@@ -66,8 +66,6 @@ const ItemAfter = styled.div`
 
   }
 `
-const Img = styled.img`
-`;
 
 export default CategoriesAllPage;
 

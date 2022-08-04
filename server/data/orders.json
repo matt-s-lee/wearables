@@ -1,19 +1,27 @@
 [
     {
-        "_id": "100000asdf",
         "userId": "abc12321",
+        "OrderId": "6aa42f25-92e4-438e-9fd4-7c26841b2b03",
         "items": [
             {
-                "itemId": 6543, 
-                "quantity": 1
+                "_id": "6560",
+                "name": "Jawbone - Up - Activity tracking wristband - medium size - Onyx - for ...",
+                "price": "$112.99",
+                "body_location": "Wrist",
+                "category": "Fitness",
+                "imageSrc": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwg...",
+                "numInStock": "8",
+                "companyId": "18834"
             },
             {
-                "itemId": 6546, 
-                "quantity": 2
-            },
-            {
-                "itemId": 6560, 
-                "quantity": 1
+                "_id": "6564",
+                "name": "Jawbone UP24 Activity Tracker",
+                "price": "$99.99",
+                "body_location": "Wrist",
+                "category": "Lifestyle",
+                "imageSrc": "data:iage/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwg...",
+                "numInStock": "6",
+                "companyId": "18834"
             }
         ]
     }

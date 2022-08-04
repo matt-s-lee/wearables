@@ -14,7 +14,6 @@ const options = {
 // get one user for sign in
 const getOneUser = async (req, res) => {
     const user = url.parse(req.url, true).query;
-    console.log(user);
 
     const client = new MongoClient(MONGO_URI, options);
     try {
@@ -25,7 +24,7 @@ const getOneUser = async (req, res) => {
         const db = client.db("EcommerceGroupProject");
         //check if both email and password are present
         if (user.email && user.password && !user.userId) {
-           
+
 
             //find user
             const result = await db.collection("users").findOne({ email: user.email });
@@ -42,7 +41,7 @@ const getOneUser = async (req, res) => {
             } else {
                 res.status(404).json({ status: 404, message: `user not found` });
             }
-        //check if login by user id
+            //check if login by user id
         } else if (user.userId && !user.email && !user.password) {
             //find user based on _id
             const result = await db.collection("users").findOne({ _id: user.userId });

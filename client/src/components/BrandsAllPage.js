@@ -26,33 +26,33 @@ const BrandsAllPage = () => {
 
   return (
     <>
-    <WrapAll>
-      <Banner imageSrc={allBrandPageBanner} />
-      <Wrapper>
-        {/* sorting letters alphabetically and map each letter */}
-        {Object.keys(sortByLetter).sort().map(letter => {
-          return (
-            <LetterWrapper>
-              <Letter>{letter}</Letter>
-              <ItemList>
-                {/* mapping array assigned to letter */}
-                {sortByLetter[letter].data.map(brand => {
-                  return (
-                    <ItemWrapper>
-                      <Item to={`/brands/${brand}`}>
-                        <ItemAfter>
-                          {brand}
-                        </ItemAfter>
-                      </Item>
-                    </ItemWrapper>
-                  )
-                })}
-              </ItemList>
-            </LetterWrapper>
-          )
-        })}
-      </Wrapper>
-    </WrapAll>
+      <WrapAll>
+        <Banner imageSrc={allBrandPageBanner} />
+        <Wrapper>
+          {/* sorting letters alphabetically and map each letter */}
+          {Object.keys(sortByLetter).sort().map(letter => {
+            return (
+              <LetterWrapper>
+                <Letter>{letter}</Letter>
+                <ItemList>
+                  {/* mapping array assigned to letter */}
+                  {sortByLetter[letter].data.map(brand => {
+                    return (
+                      <ItemWrapper>
+                        <Item to={`/brands/${brand}`}>
+                          <ItemAfter>
+                            {brand}
+                          </ItemAfter>
+                        </Item>
+                      </ItemWrapper>
+                    )
+                  })}
+                </ItemList>
+              </LetterWrapper>
+            )
+          })}
+        </Wrapper>
+      </WrapAll>
     </>
   )
 }

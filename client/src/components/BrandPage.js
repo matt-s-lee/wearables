@@ -18,7 +18,7 @@ const BrandPage = () => {
       .then(data => {
         setItems(data.data);
         setLoadingState("idle")
-      })  
+      })
   }, [brand])
 
 
