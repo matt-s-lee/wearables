@@ -3,6 +3,7 @@ import Banner from "./Banner";
 import ItemSmall from "./ItemSmall";
 import styled from "styled-components";
 import LoadingScreen from "./LoadingScreen";
+import newArrivalsBanner from "../data/banner3.jpeg";
 
 // ?? Should the descriptions go in their own file?
 
@@ -25,7 +26,7 @@ const NewArrivals = () => {
   if (newArrivals) {
     return (
       <Wrapper>
-        <Banner text="New arrivals banner" />
+        <Banner imageSrc={newArrivalsBanner}/>
         <Title>New Arrivals</Title>
         <Description>
           The worst wearables, all new. The worst wearables, all new. The worst
@@ -70,6 +71,8 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
+  padding: 0 var(--padding-page);
+
 `;
 
 const Description = styled.p`
