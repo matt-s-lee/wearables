@@ -5,6 +5,7 @@ import Banner from "./Banner";
 import ItemSmall from "./ItemSmall";
 import LoadingScreen from "./LoadingScreen";
 import { underline, underlineTransition } from "./underline";
+import AllItemBanner from "../data/AllItemsBanner.jpeg";
 
 // All Products page
 // a route (URL: /products)
@@ -39,8 +40,8 @@ const ItemsPage = () => {
   if (allResults !== undefined) {
     return (
       <Wrapper>
-        <Banner text="All Products" />
-        <Title>Products</Title>
+        <Banner imageSrc={AllItemBanner}/>
+        <Title>All Products</Title>
         <ProductsGrid>
           {firstResults &&
             firstResults.map((product) => {
