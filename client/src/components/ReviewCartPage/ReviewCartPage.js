@@ -34,19 +34,25 @@ import LoadingScreen from "../LoadingScreen";
 const ReviewCartPage = () => {
   let navigate = useNavigate();
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // for Snackbar
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // state to open Snackbar
 
-  const [cartItems, setCartItems] = useState(null); // Array of item ID #s
-  const [cartItemsArray, setCartItemsArray] = useState([]); // Array of item data
+  const [cartItems, setCartItems] = useState(null); // array of item ID #s
+  const [cartItemsArray, setCartItemsArray] = useState([]); // array of item data
   let cartItems1 = []; // empty array of items to be pushed into
-  //useState for outOfStock
-  let [outOfStock,setOutOfStock] = useState(false);
+
+  let [outOfStock, setOutOfStock] = useState(false); // state to track if item out of stock
   let total = 0;
 
-  const { state } = useContext(ShopContext);
+  const { state } = useContext(ShopContext); // brands
   let currentUser = state.currentUser;
 
-  // GET item ID #s of all items in the user's cart,
+  // ------------------------------------------------
+  // ----------------- HELPERS ----------------------
+  // ------------------------------------------------
+
+  // ---------------------------------------------------
+  // GET ID #s of all items in the user's cart, on mount
+  // ---------------------------------------------------
   const getCartDetails = async () => {
     if (currentUser) {
       // const response = await fetch(`/api/all-items-in-cart/${userId}`);
@@ -55,13 +61,13 @@ const ReviewCartPage = () => {
       setCartItems(data.data.items);
     }
   };
-
-  // GET cart details on mount
   useEffect(() => {
     getCartDetails();
   }, []);
 
+  // --------------------------------------------------------------------
   // GET data for each item in the cart (using item ID #s received above)
+  // --------------------------------------------------------------------
   useEffect(() => {
     if (cartItems) {
       Promise.all(
@@ -77,7 +83,9 @@ const ReviewCartPage = () => {
     }
   }, [cartItems]);
 
+  // -------------------------
   // DELETE item from the cart
+  // -------------------------
   const handleRemove = (_id) => {
     setOutOfStock(false);
     if (currentUser) {
@@ -102,7 +110,9 @@ const ReviewCartPage = () => {
     }
   };
 
+  // -----------------
   // ADD item to cart
+  // -----------------
   const handleAdd = (_id) => {
     setOutOfStock(false);
     if (currentUser) {
@@ -114,7 +124,7 @@ const ReviewCartPage = () => {
         });
       });
     }
-    if(outOfStock === false){
+    if (outOfStock === false) {
       fetch(`/api/add-item-in-cart/`, {
         method: "POST",
         headers: {
@@ -133,12 +143,13 @@ const ReviewCartPage = () => {
             getCartDetails();
           }
         })
-        .catch((err) => {
-        });
-  }
+        .catch((err) => {});
+    }
   };
 
-  //Calculate the total price of the order
+  // --------------------------------------
+  // Calculate the total price of the order
+  // --------------------------------------
   const totalCost = () => {
     if (cartItemsArray.length) {
       cartItems.forEach((cartItem) => {
@@ -155,6 +166,8 @@ const ReviewCartPage = () => {
   };
 
   // ------------------------------------------------
+  // ------------------ COMPONENTS ------------------
+  // ------------------------------------------------
   if (currentUser && cartItems) {
     return (
       <div>
@@ -170,7 +183,9 @@ const ReviewCartPage = () => {
         )}
         {cartItems && (
           <Review>
-            {/* Conditional rendering of Item Details table */}
+            {/* ---------------------------- */}
+            {/* ---- Item Details table ---- */}
+            {/* ---------------------------- */}
             {cartItems.length === 0 ? (
               <EmptyCart>There is nothing in your cart</EmptyCart>
             ) : (
@@ -203,7 +218,10 @@ const ReviewCartPage = () => {
                           <ItemData>{cartItems[index].quantity}</ItemData>
                         )}
                         <ItemData>
-                          <ChangeQuantity onClick={() => handleAdd(item._id)} disabled={outOfStock}>
+                          <ChangeQuantity
+                            onClick={() => handleAdd(item._id)}
+                            disabled={outOfStock}
+                          >
                             <IoAddSharp />
                           </ChangeQuantity>
                         </ItemData>
@@ -213,11 +231,12 @@ const ReviewCartPage = () => {
                 </tbody>
               </ItemDetails>
             )}
-            {/* Conditional rendering of Subtotal Table if no items in cart */}
+            {/* ---------------------------- */}
+            {/* ------ Subtotal Table ------ */}
+            {/* ---------------------------- */}
             {cartItems.length === 0 ? (
               <div></div>
             ) : (
-              // <PriceSummary total={total} />
               <Cost>
                 <CostDetails>
                   <tbody>
@@ -252,23 +271,21 @@ const ReviewCartPage = () => {
         )}
       </div>
     );
-  }
-  else if (currentUser && cartItems) {
+  } else if (currentUser && cartItems) {
     return (
       <LoadWrapper>
         <LoadingScreen />
       </LoadWrapper>
-    )
-  }
-  else {
+    );
+  } else {
     return (
       <LoadWrapper>
         <span>Please&nbsp;</span>
-        <NavLink to="/signin" >log-in</NavLink> 
+        <NavLink to="/signin">log-in</NavLink>
         <span>&nbsp;to see cart!</span>
       </LoadWrapper>
-    )
-  };
+    );
+  }
 };
 
 export default ReviewCartPage;

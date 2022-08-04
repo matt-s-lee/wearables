@@ -1,13 +1,16 @@
+// -----------------------------------------------------------
+// ---- Component for every small product card in the app ----
+// -----------------------------------------------------------
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { underline, underlineTransition } from "./underline";
 
 const ItemSmall = ({ imageSrc, name, price, companyId, id }) => {
   let navigate = useNavigate();
-  const [brandName, setBrandName] = useState("");
-  console.log(brandName);
+  const [brandName, setBrandName] = useState(""); // set brand name, using the companyId
 
+  // Handler for when product card is clicked
   const handleClickItem = (ev) => {
     ev.preventDefault();
     navigate(`/item/${id}`);
@@ -15,6 +18,14 @@ const ItemSmall = ({ imageSrc, name, price, companyId, id }) => {
     setBrandName("");
   };
 
+  // Handler for when brand name (on product card) is clicked
+  const handleClickBrand = (ev) => {
+    ev.preventDefault();
+    navigate(`/brands/${brandName}`);
+    ev.stopPropagation();
+  };
+
+  // FETCH brand name using companyId
   useEffect(() => {
     if (companyId) {
       fetch(`/api/get-brand-name/${companyId}`)
@@ -30,20 +41,14 @@ const ItemSmall = ({ imageSrc, name, price, companyId, id }) => {
       <Wrapper onClick={handleClickItem}>
         <Image src={imageSrc} alt={name} />
         <Name>{name}</Name>
-        <Company
-          onClick={(ev) => {
-            ev.preventDefault();
-            navigate(`/brands/${brandName}`);
-            ev.stopPropagation();
-          }}
-        >
-          {brandName.toUpperCase()}
-        </Company>
+        <Company onClick={handleClickBrand}>{brandName.toUpperCase()}</Company>
         <Price>{price}</Price>
       </Wrapper>
     )
   );
 };
+
+// -----------------------------------------------------------
 
 const Wrapper = styled.div`
   display: flex;
