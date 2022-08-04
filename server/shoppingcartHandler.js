@@ -11,7 +11,7 @@ const options = {
 
 const getAllItemsInCart = async (req, res) => {
   const _id = req.params.user;
-  console.log(_id);
+
   // create new client
   const client = new MongoClient(MONGO_URI, options);
 
@@ -133,7 +133,6 @@ const deleteItemInCart = async (req, res) => {
 
       // check if a shopping cart for this user exist
       if (result) {
-        console.log(result)
         // check if item in shopping cart
         let itemIndex = -1;
         result.items.forEach((element, index) => {

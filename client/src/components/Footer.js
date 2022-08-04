@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { underline, underlineTransition } from "./underline";
 import { HiLocationMarker, HiPhone, HiMail } from "react-icons/hi";
 
