@@ -5,34 +5,31 @@ import styled from "styled-components";
 import LoadingScreen from "./LoadingScreen";
 import newArrivalsBanner from "../data/banner3.jpeg";
 
-// ?? Should the descriptions go in their own file?
+// PAGE COMPONENT FOR "/new-arrivals" route
+// --------------------------------------------
 
-// PAGE COMPONENT FOR "/new-arrivals"
 const NewArrivals = () => {
-  const [newArrivals, setNewArrivals] = useState(null);
-  // console.log(newArrivals);
+  const [newArrivals, setNewArrivals] = useState(null); // state for all new items
 
-  // FETCH request for all new items
+  // FETCH all new items
   useEffect(() => {
     fetch("/api/new-arrivals")
-      .then((res) => res.json()) // is it in JSON?
+      .then((res) => res.json())
       .then((json) => {
         setNewArrivals(json.data);
       });
   }, []);
 
-  // RETURNS a banner with text, the page description, and items
-  // RETURNS loading when fetching
   if (newArrivals) {
     return (
       <Wrapper>
-        <Banner imageSrc={newArrivalsBanner}/>
+        <Banner imageSrc={newArrivalsBanner} />
         <Title>New Arrivals</Title>
         <Description>
           The worst wearables, all new. The worst wearables, all new. The worst
           wearables, all new. The worst wearables, all new. The worst wearables,
-          all new. The worst wearables, all new. The worst wearables, all new. The
-          worst wearables, all new. The worst wearables, all new. The worst
+          all new. The worst wearables, all new. The worst wearables, all new.
+          The worst wearables, all new. The worst wearables, all new. The worst
           wearables, all new.
         </Description>
 
@@ -51,28 +48,28 @@ const NewArrivals = () => {
         </List>
       </Wrapper>
     );
-  }
-  else {
+  } else {
     return (
       <Wrapper>
         <LoadingScreen />
       </Wrapper>
-    )
+    );
   }
 };
+
+// --------------------------------------------
 
 const Title = styled.div`
   margin: 10px auto;
   font-size: 32px;
   text-decoration: underline;
-`
+`;
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
   padding: 0 var(--padding-page);
-
 `;
 
 const Description = styled.p`
@@ -85,6 +82,6 @@ const List = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: space-evenly;
-`
+`;
 
 export default NewArrivals;
