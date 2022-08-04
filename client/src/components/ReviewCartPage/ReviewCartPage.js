@@ -41,6 +41,8 @@ const ReviewCartPage = () => {
   let cartItems1 = []; // empty array of items to be pushed into
 
   let [outOfStock, setOutOfStock] = useState(false); // state to track if item out of stock
+  let updateStock = false; // state to track if out of stock is updated
+  
   let total = 0;
 
   const { state } = useContext(ShopContext); // brands
@@ -115,16 +117,18 @@ const ReviewCartPage = () => {
   // -----------------
   const handleAdd = (_id) => {
     setOutOfStock(false);
+    updateStock = false;
     if (currentUser) {
       cartItems.forEach((cartItem) => {
         cartItemsArray.forEach((item) => {
           if (item.numInStock <= cartItem.quantity) {
             setOutOfStock(true);
+            updateStock = true;
           }
         });
       });
     }
-    if (outOfStock === false) {
+    if(outOfStock === false && updateStock === false){
       fetch(`/api/add-item-in-cart/`, {
         method: "POST",
         headers: {
@@ -143,8 +147,9 @@ const ReviewCartPage = () => {
             getCartDetails();
           }
         })
-        .catch((err) => {});
-    }
+        .catch((err) => {
+        });
+  }
   };
 
   // --------------------------------------
