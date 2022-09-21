@@ -1,5 +1,7 @@
 # Wearables
 
+![Homepage GIF](client/public/wearless-homepage.gif)
+
 "Wearables" is an e-commerce website for wearable technology devices. The website is fully functional, allowing users to:
 
 - browse all products in the database;
